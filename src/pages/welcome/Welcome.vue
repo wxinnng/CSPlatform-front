@@ -5,31 +5,26 @@
       <div class="header-content">
         <!-- 左侧Logo和标题 -->
         <div class="header-left">
-          <n-avatar 
-            size="medium" 
-            src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" 
-            class="avatar"
-          />
+          <n-avatar size="medium" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" class="avatar" />
           <n-gradient-text type="danger" size="24" class="title">
             Sing
           </n-gradient-text>
         </div>
-        
+
         <!-- 右侧导航和按钮 -->
         <div class="header-right">
           <n-flex justify="end" align="center" :size="[20, 0]" :wrap="false" class="nav-buttons">
-            <n-button quaternary :type="isDark ? 'default' : 'default'" focusable="false" @click="scrollTo('hero')">首页</n-button>
-            <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false" @click="scrollTo('features')">服务</n-button>
-            <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false" @click="scrollTo('projects')">项目</n-button>
-            <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false" @click="scrollTo('about')">关于</n-button>
-            
+            <n-button quaternary :type="isDark ? 'default' : 'default'" focusable="false"
+              @click="scrollTo('hero')">首页</n-button>
+            <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false"
+              @click="scrollTo('features')">服务</n-button>
+            <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false"
+              @click="scrollTo('projects')">项目</n-button>
+            <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false"
+              @click="scrollTo('about')">关于</n-button>
+
             <!-- 主题切换按钮 -->
-            <n-button 
-              quaternary 
-              :type="isDark ? 'error' : 'error'" 
-              @click="toggleTheme" 
-              class="theme-toggle-btn"
-            >
+            <n-button quaternary :type="isDark ? 'error' : 'error'" @click="toggleTheme" class="theme-toggle-btn">
               <template #icon>
                 <n-icon>
                   <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
@@ -44,7 +39,7 @@
               </template>
               {{ isDark ? '浅色模式' : '深色模式' }}
             </n-button>
-            
+
             <!-- GitHub链接 -->
             <n-button quaternary type="tertiary" class="github-btn">
               <a href="https://github.com/wxinnng/CSPlatform" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -53,61 +48,123 @@
         </div>
       </div>
     </n-layout-header>
-    
+
     <!-- 主要内容区域（可滚动） -->
     <div class="scrollable-content">
       <!-- Hero Section -->
       <section id="hero" class="hero-section">
+        <!-- 装饰元素 - 背景形状 -->
+        <div class="hero-background">
+          <div class="shape shape-1" :class="{ 'dark': isDark }"></div>
+          <div class="shape shape-2" :class="{ 'dark': isDark }"></div>
+          <div class="shape shape-3" :class="{ 'dark': isDark }"></div>
+          <div class="shape shape-4" :class="{ 'dark': isDark }"></div>
+        </div>
+
+        <!-- 装饰元素 - 漂浮图标 -->
+        <div class="floating-elements">
+          <div class="floating-icon icon-1" :class="{ 'dark': isDark }">
+            <n-icon size="24">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+            </n-icon>
+          </div>
+          <div class="floating-icon icon-2" :class="{ 'dark': isDark }">
+            <n-icon size="24">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
+              </svg>
+            </n-icon>
+          </div>
+          <div class="floating-icon icon-3" :class="{ 'dark': isDark }">
+            <n-icon size="24">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            </n-icon>
+          </div>
+        </div>
+
         <div class="hero-content">
-          <n-h1 :type="isDark ? 'info' : 'success'" style="font-size: 3.5rem; margin-bottom: 1.5rem;">
-            Welcome to My Platform
-          </n-h1>
-          <n-h2 :type="isDark ? 'warning' : 'primary'" style="font-size: 2rem; margin-bottom: 2rem;">
-            构建卓越的数字体验
-          </n-h2>
-          <n-p :type="isDark ? 'default' : 'default'" style="font-size: 1.2rem; max-width: 600px; margin-bottom: 2.5rem;">
-            这是一个基于Vue 3和Naive UI构建的现代Web应用平台。我们致力于提供优雅的用户界面和出色的用户体验。
-          </n-p>
-          <n-space :size="20">
-            <n-button type="primary" size="large" @click="scrollTo('features')">
-              开始探索
-              <template #icon>
-                <n-icon>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="currentColor" d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/>
+          <!-- 装饰线条 -->
+          <div class="hero-line left" :class="{ 'dark': isDark }"></div>
+          <div class="hero-line right" :class="{ 'dark': isDark }"></div>
+
+          <!-- 装饰点阵 -->
+          <div class="dot-pattern" :class="{ 'dark': isDark }"></div>
+
+          <!-- 主要内容 -->
+          <div class="hero-main-content">
+            <n-h1 :type="isDark ? 'info' : 'success'" class="hero-title">
+              <span class="title-text">Welcome to My Platform</span>
+              <span class="title-highlight" :class="{ 'dark': isDark }"></span>
+            </n-h1>
+
+            <n-h2 :type="isDark ? 'warning' : 'primary'" class="hero-subtitle">
+              构建卓越的数字体验
+            </n-h2>
+
+            <n-p :type="isDark ? 'default' : 'default'" class="hero-description">
+              这是一个基于Vue 3和Naive UI构建的现代Web应用平台。我们致力于提供优雅的用户界面和出色的用户体验。
+            </n-p>
+
+            <!-- 装饰性分隔符 -->
+            <div class="hero-divider" :class="{ 'dark': isDark }">
+              <div class="divider-line"></div>
+              <div class="divider-icon">
+                <n-icon size="20">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
                   </svg>
                 </n-icon>
-              </template>
-            </n-button>
-            <n-button secondary type="info" size="large" @click="openGitHub">
-              查看项目
-            </n-button>
-          </n-space>
+              </div>
+              <div class="divider-line"></div>
+            </div>
+
+            <n-space :size="20" class="hero-actions">
+              <n-button type="primary" size="large" class="hero-btn" @click="scrollTo('features')">
+                开始探索
+                <template #icon>
+                  <n-icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                      <path fill="currentColor"
+                        d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z" />
+                    </svg>
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-button secondary type="info" size="large" class="hero-btn" @click="openGitHub">
+                查看项目
+              </n-button>
+            </n-space>
+
+            <!-- 滚动提示 -->
+            <div class="scroll-hint" :class="{ 'dark': isDark }" @click="scrollTo('features')">
+              <span>向下滚动</span>
+              <n-icon class="bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                </svg>
+              </n-icon>
+            </div>
+          </div>
         </div>
       </section>
-      
+
       <!-- Features Section -->
       <section id="features" class="features-section">
-        <n-h2 prefix="bar" align-text :type="isDark ? 'info' : 'primary'" style="font-size: 2.5rem; margin-bottom: 3rem;">
+        <n-h2 prefix="bar" align-text :type="isDark ? 'info' : 'primary'"
+          style="font-size: 2.5rem; margin-bottom: 3rem;">
           核心服务
         </n-h2>
-        
+
         <div class="features-grid">
-          <n-card
-            v-for="feature in features"
-            :key="feature.title"
-            hoverable
-            class="feature-card"
-            :bordered="!isDark"
-            :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff' }"
-          >
+          <n-card v-for="feature in features" :key="feature.title" hoverable class="feature-card" :bordered="!isDark"
+            :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff' }">
             <template #cover>
-              <n-image
-                :src="feature.image"
-                height="200"
-                object-fit="cover"
-                preview-disabled
-              />
+              <n-image :src="feature.image" height="200" object-fit="cover" preview-disabled />
             </template>
             <n-h3 :type="feature.color">
               {{ feature.title }}
@@ -123,22 +180,21 @@
           </n-card>
         </div>
       </section>
-      
+
       <!-- About Section -->
       <section id="about" class="about-section">
-        <n-h2 prefix="bar" align-text :type="isDark ? 'warning' : 'error'" style="font-size: 2.5rem; margin-bottom: 2rem;">
+        <n-h2 prefix="bar" align-text :type="isDark ? 'warning' : 'error'"
+          style="font-size: 2.5rem; margin-bottom: 2rem;">
           关于我们
         </n-h2>
-        
-        <n-card
-          :bordered="!isDark"
-          :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff', maxWidth: '800px', margin: '0 auto' }"
-        >
+
+        <n-card :bordered="!isDark"
+          :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff', maxWidth: '800px', margin: '0 auto' }">
           <n-space vertical :size="20">
             <n-p style="font-size: 1.1rem; line-height: 1.8;">
               我们是一支专注于Web技术的前端团队，致力于通过现代化的技术栈为用户提供卓越的数字体验。我们相信优秀的设计和代码能够创造价值。
             </n-p>
-            
+
             <n-space :size="20">
               <n-statistic label="项目完成" :value="42">
                 <template #suffix>
@@ -156,25 +212,19 @@
                 </template>
               </n-statistic>
             </n-space>
-            
+
             <n-divider />
-            
+
             <n-space justify="center" :size="30">
-              <n-button
-                v-for="(contact, index) in contacts"
-                :key="index"
-                :type="contact.type"
-                quaternary
-                :icon-placement="contact.icon"
-                @click="contact.action"
-              >
+              <n-button v-for="(contact, index) in contacts" :key="index" :type="contact.type" quaternary
+                :icon-placement="contact.icon" @click="contact.action">
                 {{ contact.label }}
               </n-button>
             </n-space>
           </n-space>
         </n-card>
       </section>
-      
+
       <!-- Footer -->
       <footer class="footer-section">
         <n-divider />
@@ -194,28 +244,32 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { 
-  NLayoutHeader, 
-  NH1, 
-  NH2, 
-  NH3, 
-  NP, 
-  NButton, 
-  NSpace, 
-  NImage, 
-  NCard, 
-  NTag, 
-  NStatistic, 
-  NDivider, 
+import {
+  NLayoutHeader,
+  NH1,
+  NH2,
+  NH3,
+  NP,
+  NButton,
+  NSpace,
+  NImage,
+  NCard,
+  NTag,
+  NStatistic,
+  NDivider,
   NText,
   NIcon,
   NAvatar,
   NGradientText,
-  NFlex
+  NFlex,
+  useLoadingBar
 } from 'naive-ui';
+import { useRouter } from 'vue-router';
+import { useMessage } from 'naive-ui'
 
 // 主题状态 - 与外部同步
 const isDark = ref(false);
+const loadingBar = useLoadingBar();
 
 // 监听主题变化
 const updateTheme = () => {
@@ -225,17 +279,27 @@ const updateTheme = () => {
   html.setAttribute('data-theme', theme);
 };
 
+// 切换主题函数
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+  const theme = isDark.value ? 'dark' : 'light';
+  localStorage.setItem('theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+  // 触发自定义事件，通知其他组件主题已变化
+  window.dispatchEvent(new CustomEvent('theme-change'));
+};
+
 // 初始化时检查主题
 onMounted(() => {
   updateTheme();
-  
+
   // 监听存储变化以同步主题
   window.addEventListener('storage', (e) => {
     if (e.key === 'theme') {
       updateTheme();
     }
   });
-  
+
   // 监听自定义主题变化事件
   window.addEventListener('theme-change', updateTheme);
 });
@@ -262,28 +326,6 @@ const features = ref([
   }
 ]);
 
-// 项目列表
-const projects = ref([
-  {
-    name: 'CSPlatform',
-    description: '一个全面的计算机科学学习平台，提供丰富的教程和实践项目',
-    status: 'Active',
-    tech: ['Vue 3', 'TypeScript', 'Naive UI']
-  },
-  {
-    name: 'Design System',
-    description: '企业级设计系统，包含完整的组件库和设计规范',
-    status: 'Active',
-    tech: ['React', 'Storybook', 'Figma']
-  },
-  {
-    name: 'E-Commerce Platform',
-    description: '现代化的电子商务平台，支持多商家和智能推荐',
-    status: 'Completed',
-    tech: ['Vue 3', 'Node.js', 'MongoDB']
-  }
-]);
-
 // 联系方式
 const contacts = ref([
   {
@@ -306,20 +348,90 @@ const contacts = ref([
   }
 ]);
 
-// 平滑滚动到指定部分
-const scrollTo = (sectionId) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    const headerHeight = 60; // Header高度
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-    
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
+const message = useMessage()
+
+
+// 检查登录状态
+const isLoggedIn = () => {
+  // 从 localStorage 检查
+  const token = localStorage.getItem('access_token') ||
+    localStorage.getItem('token') ||
+    sessionStorage.getItem('token')
+
+  // 如果有 token，还可以验证有效性
+  if (token) {
+    // 可选：验证 token 是否过期
+    const tokenExpiry = localStorage.getItem('token_expiry')
+    if (tokenExpiry && new Date(tokenExpiry) < new Date()) {
+      // token 已过期
+      localStorage.removeItem('token')
+      localStorage.removeItem('token_expiry')
+      return false
+    }
+    return true
   }
-};
+  return false
+}
+
+
+
+// 正确：在 setup 顶部获取路由实例
+const router = useRouter()
+
+// 平滑滚动到指定部分
+const scrollTo = async (sectionId) => {
+  try {
+    loadingBar.start()
+    
+    // 1. 执行平滑滚动
+    const scrollPromise = new Promise((resolve) => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        const headerHeight = 60 // Header高度
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+        
+        // 等待滚动完成（约600ms）
+        setTimeout(resolve, 600)
+      } else {
+        resolve() // 如果没有元素，直接继续
+      }
+    })
+    
+    await scrollPromise // 等待滚动完成
+    
+    // 2. 检查登录状态
+    if (isLoggedIn()) {
+      // 已登录
+      message.success('已登录，跳转中...')
+      await new Promise(resolve => setTimeout(resolve, 300)) // 短暂延迟显示消息
+      router.push("/mainPage")
+    } else {
+      // 未登录
+      message.warning('请先登录以继续操作')
+      
+      // 短暂延迟让用户看到消息
+      await new Promise(resolve => setTimeout(resolve, 800))
+      
+      // 携带返回路径
+      router.push({
+        path: '/auth',
+        query: { redirect: '/mainPage' }
+      })
+    }
+    
+  } catch (error) {
+    console.error('跳转失败:', error)
+    message.error('跳转失败，请重试')
+  } finally {
+    loadingBar.finish()
+  }
+}
 
 // 打开GitHub
 const openGitHub = () => {
@@ -334,6 +446,7 @@ const openGitHub = () => {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 /* 固定Header样式 */
@@ -426,54 +539,443 @@ const openGitHub = () => {
   height: 100%;
 }
 
-/* 可滚动内容区域 - 修复空白问题 */
+/* 可滚动内容区域 */
 .scrollable-content {
-  padding-top: 60px; /* Header高度 */
-  min-height: calc(100vh - 60px); /* 计算正确的高度 */
+  padding-top: 60px;
+  min-height: calc(100vh - 60px);
   background-color: var(--n-color-embedded);
   transition: background-color 0.3s ease;
   margin: 0;
   overflow-x: hidden;
+  position: relative;
 }
 
-/* 各部分通用样式 */
-section {
-  padding: 40px 20px; /* 减少上下的padding */
+/* Hero Section 新样式 */
+.hero-section {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+/* 背景形状装饰 */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-background .shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  filter: blur(40px);
+  transition: all 0.6s ease;
+}
+
+.hero-background .shape.dark {
+  opacity: 0.15;
+  filter: blur(30px);
+}
+
+.hero-background .shape-1 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(45deg, #1890ff, #722ed1);
+  top: 10%;
+  left: 5%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.hero-background .shape-2 {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(45deg, #fa541c, #faad14);
+  bottom: 20%;
+  right: 10%;
+  animation: float 25s infinite ease-in-out reverse;
+}
+
+.hero-background .shape-3 {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(45deg, #52c41a, #13c2c2);
+  top: 50%;
+  left: 85%;
+  animation: float 18s infinite ease-in-out;
+}
+
+.hero-background .shape-4 {
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(45deg, #eb2f96, #722ed1);
+  bottom: 5%;
+  left: 15%;
+  animation: float 30s infinite ease-in-out reverse;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+/* 漂浮图标装饰 */
+.floating-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.floating-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.floating-icon.dark {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.floating-icon.icon-1 {
+  top: 20%;
+  left: 10%;
+  animation: float-icon-1 15s infinite ease-in-out;
+}
+
+.floating-icon.icon-2 {
+  top: 30%;
+  right: 15%;
+  animation: float-icon-2 20s infinite ease-in-out;
+}
+
+.floating-icon.icon-3 {
+  bottom: 25%;
+  left: 20%;
+  animation: float-icon-3 18s infinite ease-in-out;
+}
+
+@keyframes float-icon-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(20px, -20px) rotate(90deg);
+  }
+
+  50% {
+    transform: translate(0, -40px) rotate(180deg);
+  }
+
+  75% {
+    transform: translate(-20px, -20px) rotate(270deg);
+  }
+}
+
+@keyframes float-icon-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(-20px, 20px) rotate(-90deg);
+  }
+
+  50% {
+    transform: translate(0, 40px) rotate(-180deg);
+  }
+
+  75% {
+    transform: translate(20px, 20px) rotate(-270deg);
+  }
+}
+
+@keyframes float-icon-3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(10px, -10px) rotate(45deg);
+  }
+
+  50% {
+    transform: translate(-10px, 10px) rotate(135deg);
+  }
+
+  75% {
+    transform: translate(-10px, -10px) rotate(225deg);
+  }
+}
+
+/* 主要内容区域 */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-/* Hero Section - 特别处理 */
-.hero-section {
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 60px); /* 填满首屏，减去Header高度 */
-  padding: 20px; /* 减少padding */
-  margin: 0;
+  text-align: center;
 }
 
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+/* 装饰线条 */
+.hero-line {
+  position: absolute;
+  top: 50%;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #1890ff, transparent);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.hero-line.dark {
+  background: linear-gradient(90deg, transparent, #52c41a, transparent);
+  opacity: 0.4;
+}
+
+.hero-line.left {
+  left: calc(50% - 300px);
+  transform: translateY(-50%);
+}
+
+.hero-line.right {
+  right: calc(50% - 300px);
+  transform: translateY(-50%);
+}
+
+/* 点阵背景 */
+.dot-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.05;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.dot-pattern.dark {
+  opacity: 0.1;
+}
+
+/* 主要内容 */
+.hero-main-content {
+  position: relative;
+  z-index: 3;
   max-width: 800px;
-  padding: 20px 0;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.title-highlight {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #1890ff, #722ed1, #52c41a);
+  opacity: 0.3;
+  border-radius: 4px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.title-highlight.dark {
+  background: linear-gradient(90deg, #52c41a, #13c2c2, #1890ff);
+  opacity: 0.4;
+}
+
+.hero-subtitle {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* 装饰性分隔符 */
+.hero-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 2.5rem auto;
+  width: 100%;
+  max-width: 400px;
+}
+
+.hero-divider .divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d9d9d9, transparent);
+  transition: all 0.3s ease;
+}
+
+.hero-divider.dark .divider-line {
+  background: linear-gradient(90deg, transparent, #434343, transparent);
+}
+
+.hero-divider .divider-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1890ff;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.hero-divider.dark .divider-icon {
+  color: #52c41a;
+  opacity: 0.8;
+}
+
+/* 按钮区域 */
+.hero-actions {
+  margin-bottom: 3rem;
+}
+
+.hero-btn {
+  padding: 0 32px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 滚动提示 */
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #8c8c8c;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scroll-hint.dark {
+  color: #a6a6a6;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scroll-hint:hover {
+  color: #1890ff;
+  transform: translateY(-5px);
+  background: rgba(24, 144, 255, 0.1);
+  border-color: rgba(24, 144, 255, 0.3);
+}
+
+.scroll-hint.dark:hover {
+  color: #52c41a;
+  background: rgba(82, 196, 26, 0.1);
+  border-color: rgba(82, 196, 26, 0.3);
+}
+
+.scroll-hint span {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-10px);
+  }
+
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Features Section */
 .features-section {
-  padding: 60px 20px; /* 减少padding */
-  min-height: auto; /* 移除min-height */
+  padding: 100px 20px;
+  min-height: auto;
+  position: relative;
+  z-index: 1;
+  background: var(--n-color-embedded);
 }
 
 .features-grid {
@@ -497,17 +999,22 @@ section {
 
 /* About Section */
 .about-section {
-  padding: 60px 20px; /* 减少padding */
-  min-height: auto; /* 移除min-height */
+  padding: 100px 20px;
+  min-height: auto;
+  position: relative;
+  z-index: 1;
+  background: var(--n-color-embedded);
 }
 
 /* Footer Section */
 .footer-section {
-  padding: 40px 20px;
+  padding: 60px 20px;
   text-align: center;
-  background-color: var(--n-color-embedded);
+  background: var(--n-color-embedded);
   border-top: 1px solid var(--n-border-color);
-  min-height: auto; /* 移除min-height */
+  min-height: auto;
+  position: relative;
+  z-index: 1;
 }
 
 /* 响应式设计 */
@@ -516,42 +1023,70 @@ section {
     height: 56px;
     padding: 0 12px;
   }
-  
+
   .scrollable-content {
     padding-top: 56px;
     min-height: calc(100vh - 56px);
   }
-  
+
   .hero-section {
     min-height: calc(100vh - 56px);
-    padding: 10px;
+    padding: 0 12px;
   }
-  
-  section {
-    padding: 30px 12px;
+
+  .hero-title {
+    font-size: 2.5rem;
   }
-  
-  .hero-section h1 {
-    font-size: 2.5rem !important;
+
+  .hero-subtitle {
+    font-size: 1.5rem;
   }
-  
-  .hero-section h2 {
-    font-size: 1.5rem !important;
+
+  .hero-description {
+    font-size: 1rem;
   }
-  
+
+  .hero-background .shape-1,
+  .hero-background .shape-2,
+  .hero-background .shape-3,
+  .hero-background .shape-4 {
+    display: none;
+  }
+
+  .floating-icon {
+    display: none;
+  }
+
+  .hero-line.left,
+  .hero-line.right {
+    display: none;
+  }
+
+  .features-section,
+  .about-section {
+    padding: 60px 12px;
+  }
+
   .features-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .nav-buttons .n-button:not(.theme-toggle-btn):not(.github-btn) {
     display: none;
+  }
+
+  .hero-btn {
+    padding: 0 20px;
+    height: 44px;
+    font-size: 14px;
   }
 }
 </style>
 
 <style>
 /* 重置全局默认边距 */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;

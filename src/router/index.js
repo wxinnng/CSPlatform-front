@@ -3,6 +3,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Welcome from '../pages/welcome/Welcome.vue'
 import MainPage from '../pages/mainPage/MainPage.vue'
+import Auth from '../pages/auth/Auth.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,11 @@ const router = createRouter({
             name: 'mainPage',
             path: '/mainPage',
             component: MainPage
+        },
+        {
+            name: 'auth',
+            path: '/auth',
+            component: Auth
         },
         {
             path: '/',

@@ -6,16 +6,12 @@
         <div class="header-content">
           <!-- 左侧Logo和标题 -->
           <div class="header-left">
-            <n-avatar 
-              size="medium" 
-              src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" 
-              class="avatar"
-            />
+            <n-avatar size="medium" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" class="avatar" />
             <n-gradient-text type="danger" size="24" class="title">
               Sing
             </n-gradient-text>
           </div>
-          
+
           <!-- 右侧导航和按钮 -->
           <div class="header-right">
             <n-flex justify="end" align="center" :size="[20, 0]" :wrap="false" class="nav-buttons">
@@ -23,14 +19,9 @@
               <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false">服务</n-button>
               <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false">项目</n-button>
               <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false">关于</n-button>
-              
+
               <!-- 主题切换按钮 -->
-              <n-button 
-                quaternary 
-                :type="isDark ? 'error' : 'error'" 
-                @click="toggleTheme" 
-                class="theme-toggle-btn"
-              >
+              <n-button quaternary :type="isDark ? 'error' : 'error'" @click="toggleTheme" class="theme-toggle-btn">
                 <template #icon>
                   <n-icon>
                     <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
@@ -45,7 +36,7 @@
                 </template>
                 {{ isDark ? '浅色模式' : '深色模式' }}
               </n-button>
-              
+
               <!-- GitHub链接 -->
               <n-button quaternary type="tertiary" class="github-btn">
                 <a href="https://github.com/wxinnng/CSPlatform" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -54,11 +45,15 @@
           </div>
         </div>
       </n-layout-header>
-      
+
       <!-- 主内容区域 -->
       <n-layout class="main-layout">
         <n-layout-content class="content-area">
-          <router-view />
+          <n-message-provider>
+            <n-loading-bar-provider>
+              <router-view />
+            </n-loading-bar-provider>
+          </n-message-provider>
           <n-global-style />
         </n-layout-content>
       </n-layout>
@@ -119,8 +114,10 @@ onMounted(() => {
   top: 0;
   left: 0;
   z-index: 1000;
-  width: 100%; /* 固定宽度占满视口 */
-  height: 60px; /* 固定高度 */
+  width: 100%;
+  /* 固定宽度占满视口 */
+  height: 60px;
+  /* 固定高度 */
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -135,12 +132,15 @@ onMounted(() => {
 /* Header内容容器 */
 .header-content {
   width: 100%;
-  max-width: 1200px; /* 最大宽度限制 */
-  margin: 0 auto; /* 水平居中 */
+  max-width: 1200px;
+  /* 最大宽度限制 */
+  margin: 0 auto;
+  /* 水平居中 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%; /* 继承Header的固定高度 */
+  height: 100%;
+  /* 继承Header的固定高度 */
 }
 
 /* 左侧Logo和标题 */
@@ -148,7 +148,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 100%; /* 继承Header的固定高度 */
+  height: 100%;
+  /* 继承Header的固定高度 */
 }
 
 .avatar {
@@ -167,17 +168,20 @@ onMounted(() => {
 .header-right {
   display: flex;
   align-items: center;
-  height: 100%; /* 继承Header的固定高度 */
+  height: 100%;
+  /* 继承Header的固定高度 */
 }
 
 .nav-buttons {
   display: flex;
   align-items: center;
-  height: 100%; /* 继承Header的固定高度 */
+  height: 100%;
+  /* 继承Header的固定高度 */
 }
 
 .nav-buttons .n-button {
-  height: 36px; /* 固定按钮高度 */
+  height: 36px;
+  /* 固定按钮高度 */
   font-size: 14px;
   font-weight: 500;
   padding: 0 12px;
@@ -185,13 +189,15 @@ onMounted(() => {
 }
 
 .theme-toggle-btn {
-  height: 36px; /* 固定按钮高度 */
+  height: 36px;
+  /* 固定按钮高度 */
   padding: 0 12px;
   min-width: auto;
 }
 
 .github-btn {
-  height: 36px; /* 固定按钮高度 */
+  height: 36px;
+  /* 固定按钮高度 */
   padding: 0 12px;
 }
 
@@ -216,7 +222,8 @@ onMounted(() => {
 /* 内容区域 - 自动填充剩余空间 */
 .content-area {
   position: fixed;
-  top: 60px; /* Header固定高度 */
+  top: 60px;
+  /* Header固定高度 */
   left: 0;
   right: 0;
   bottom: 0;
@@ -243,20 +250,23 @@ onMounted(() => {
 /* 响应式调整 */
 @media (max-width: 768px) {
   .fixed-header {
-    height: 56px; /* 移动端稍小的高度 */
+    height: 56px;
+    /* 移动端稍小的高度 */
   }
-  
+
   .content-area {
-    top: 56px; /* 对应移动端Header高度 */
+    top: 56px;
+    /* 对应移动端Header高度 */
     padding: 16px;
   }
-  
+
   .header-content {
     padding: 0 12px;
   }
-  
+
   .nav-buttons .n-button:not(.theme-toggle-btn):not(.github-btn) {
-    display: none; /* 移动端隐藏部分导航按钮 */
+    display: none;
+    /* 移动端隐藏部分导航按钮 */
   }
 }
 </style>
