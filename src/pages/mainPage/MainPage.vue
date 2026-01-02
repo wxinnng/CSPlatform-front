@@ -7,35 +7,26 @@
         <div class="header-content">
           <!-- 左侧菜单按钮和标题 -->
           <div class="header-left">
-            <n-button
-              quaternary
-              circle
-              @click="toggleDrawer"
-              class="menu-btn"
-            >
+            <n-button quaternary circle @click="toggleDrawer" class="menu-btn">
               <template #icon>
                 <n-icon>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
                   </svg>
                 </n-icon>
               </template>
             </n-button>
-            <n-text strong class="page-title">控制台</n-text>
+            <n-text strong class="page-title">学习任务管理系统</n-text>
           </div>
 
           <!-- 中间：全局搜索 -->
           <div class="header-center">
-            <n-input
-              placeholder="全局搜索"
-              round
-              clearable
-              class="global-search"
-            >
+            <n-input placeholder="全局搜索" round clearable class="global-search">
               <template #prefix>
                 <n-icon>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                    <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    <path fill="currentColor"
+                      d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
                   </svg>
                 </n-icon>
               </template>
@@ -52,7 +43,8 @@
                     <template #icon>
                       <n-icon>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          <path fill="currentColor"
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                         </svg>
                       </n-icon>
                     </template>
@@ -68,7 +60,8 @@
                     <template #icon>
                       <n-icon>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                          <path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/>
+                          <path fill="currentColor"
+                            d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z" />
                         </svg>
                       </n-icon>
                     </template>
@@ -84,7 +77,8 @@
                     <template #icon>
                       <n-icon>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                          <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                          <path fill="currentColor"
+                            d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                         </svg>
                       </n-icon>
                     </template>
@@ -101,7 +95,8 @@
                       <template #icon>
                         <n-icon>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                            <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                            <path fill="currentColor"
+                              d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
                           </svg>
                         </n-icon>
                       </template>
@@ -119,46 +114,79 @@
       <n-layout-content class="main-content">
         <div class="content-grid">
           <!-- 今日任务区域 -->
-          <n-card 
-            :bordered="false" 
-            class="content-card today-tasks"
-          >
+          <n-card :bordered="false" class="content-card today-tasks">
             <template #header>
               <div class="task-header">
                 <n-text strong>今日任务</n-text>
-                <n-button text type="primary" size="small" @click="addNewTask">添加任务</n-button>
+                <n-button text type="primary" size="small" @click="showAddModal = true">添加任务</n-button>
               </div>
             </template>
             <div class="task-list-container">
               <div class="task-list" ref="taskListRef">
-                <div v-for="task in todayTasks" :key="task.id" class="task-item">
+                <div v-for="(task, index) in todayTasks" :key="task.id" class="task-item" draggable="true"
+                  @click.stop="toggleTaskDetail(task)" @dragstart="handleDragStart($event, index)"
+                  @dragover="handleDragOver($event, index)" @dragenter="handleDragEnter($event, index)"
+                  @dragleave="handleDragLeave($event)" @dragend="handleDragEnd" @drop="handleDrop($event, index)">
+
                   <div class="task-content">
-                    <n-checkbox v-model:checked="task.completed" class="task-checkbox">
-                      <span class="task-title" :class="{ 'completed': task.completed }">{{ task.title }}</span>
+                    <n-checkbox v-model:checked="task.completed" class="task-checkbox" @click.stop>
+                      <span class="task-title" :class="{ 'completed': task.completed }">
+                        <n-icon size="16" class="drag-handle">
+                          <DragHandleIcon />
+                        </n-icon>
+                        {{ task.title }}
+                      </span>
                     </n-checkbox>
                     <div class="task-actions">
-                      <n-tag 
-                        :type="task.priority" 
-                        size="small" 
-                        :bordered="false"
-                        class="task-priority"
-                        closable
-                        @close="removeTask(task.id)"
-                      >
-                        {{ task.priorityText }}
+                      <n-text depth="3" class="task-time">{{ formatTaskTime(task.startTime) }}</n-text>
+                      <n-tag :type="getPriorityType(task.priority)" size="small" :bordered="false" class="task-priority"
+                        closable @click.stop @close="removeTask(task.id)">
+                        {{ getPriorityText(task.priority) }}
                       </n-tag>
-                      <n-text depth="3" class="task-time">{{ task.time }}</n-text>
                     </div>
                   </div>
-                  <n-progress
-                    v-if="task.progress !== undefined"
-                    type="line"
-                    :percentage="task.progress"
-                    :height="4"
-                    :show-indicator="false"
-                    class="task-progress"
-                    :status="task.progress === 100 ? 'success' : 'default'"
-                  />
+
+                  <!-- 任务详情展开区域 -->
+                  <div v-if="expandedTaskId === task.id" class="task-detail-expanded">
+                    <div class="task-detail-content">
+                      <h4>任务详情:</h4>
+                      <p>{{ task.content || '暂无描述' }}</p>
+
+                      <div class="task-detail-meta">
+                        <div class="detail-item">
+                          <n-icon size="16">
+                            <CalendarIcon />
+                          </n-icon>
+                          <strong>创建时间:</strong> {{ formatDateTime(task.createdAt) }}
+                        </div>
+                        <!-- 在详情区域修改时间显示 -->
+                        <div class="detail-item">
+                          <n-icon size="16">
+                            <ClockIcon />
+                          </n-icon>
+                          <strong>截止时间:</strong> {{ task.displayEndTime || '无' }}
+                        </div>
+                        <div class="detail-item">
+                          <n-icon size="16">
+                            <TagIcon />
+                          </n-icon>
+                          <strong>标签：</strong>
+                          <n-space v-if="task.tagsArray && task.tagsArray.length > 0" :size="8"
+                            style="display: inline-flex; margin-left: 8px;">
+                            <n-tag v-for="tag in task.tagsArray" :key="tag" size="small" type="info">
+                              {{ tag }}
+                            </n-tag>
+                          </n-space>
+                          <span v-else style="color: #999; margin-left: 8px;">无标签</span>
+                        </div>
+                      </div>
+
+                      <div class="task-detail-actions">
+                        <n-button size="small" style="margin-left: 170px;" type="info"
+                          @click.stop="toggleTaskDetail(task)">收起</n-button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -174,12 +202,7 @@
           <n-card :bordered="false" class="content-card common-options">
             <n-grid :cols="2" :x-gap="12" :y-gap="12">
               <n-gi v-for="option in commonOptions" :key="option.id">
-                <n-card
-                  :title="option.title"
-                  hoverable
-                  @click="handleOptionClick(option)"
-                  class="option-card"
-                >
+                <n-card :title="option.title" hoverable @click="handleOptionClick(option)" class="option-card">
                   <template #cover>
                     <div class="option-cover" :style="{ background: option.color }">
                       <n-icon size="28" class="option-icon">
@@ -195,7 +218,7 @@
             </n-grid>
           </n-card>
 
-          <!-- 新增：系统状态卡片区域 -->
+          <!-- 系统状态卡片区域 -->
           <n-card :bordered="false" class="content-card system-status">
             <n-grid :cols="3" :x-gap="12">
               <n-gi>
@@ -203,7 +226,8 @@
                   <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <n-icon size="20">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>
                     </n-icon>
                   </div>
@@ -218,7 +242,8 @@
                   <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                     <n-icon size="20">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>
                     </n-icon>
                   </div>
@@ -233,7 +258,8 @@
                   <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                     <n-icon size="20">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path fill="currentColor"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>
                     </n-icon>
                   </div>
@@ -246,15 +272,11 @@
             </n-grid>
           </n-card>
 
-          <!-- 新增：快捷功能 -->
+          <!-- 快捷功能 -->
           <n-card title="快捷功能" :bordered="false" class="content-card quick-actions">
             <n-grid :cols="4" :x-gap="12" :y-gap="12">
               <n-gi v-for="action in quickActions" :key="action.id">
-                <n-card
-                  hoverable
-                  @click="handleQuickAction(action)"
-                  class="quick-action-card"
-                >
+                <n-card hoverable @click="handleQuickAction(action)" class="quick-action-card">
                   <template #cover>
                     <div class="quick-action-icon" :style="{ background: action.color }">
                       <n-icon size="20" class="action-icon">
@@ -271,46 +293,105 @@
       </n-layout-content>
     </n-layout>
 
+    <!-- 添加任务模态框 -->
+    <n-modal v-model:show="showAddModal" preset="dialog" title="添加新任务" positive-text="添加" negative-text="取消"
+      @positive-click="handleAddTask" @negative-click="showAddModal = false" style="width: 500px;"
+      :mask-closable="false">
+      <n-form ref="formRef" :model="newTask" :rules="rules" label-placement="left" label-width="auto"
+        require-mark-placement="right-hanging" size="medium">
+        <n-form-item label="任务标题" path="title">
+          <n-input v-model:value="newTask.title" placeholder="请输入任务标题" clearable maxlength="50" show-count />
+        </n-form-item>
+
+        <n-form-item label="任务描述" path="content">
+          <n-input v-model:value="newTask.content" type="textarea" placeholder="请输入任务描述（可选）"
+            :autosize="{ minRows: 2, maxRows: 4 }" maxlength="200" show-count />
+        </n-form-item>
+
+        <n-form-item label="优先级" path="priority">
+          <n-radio-group v-model:value="newTask.priority">
+            <n-space>
+              <n-radio :value="1" class="priority-option">
+                <n-tag type="error" size="small" :bordered="false">紧急</n-tag>
+              </n-radio>
+              <n-radio :value="2" class="priority-option">
+                <n-tag type="warning" size="small" :bordered="false">重要</n-tag>
+              </n-radio>
+              <n-radio :value="3" class="priority-option">
+                <n-tag type="info" size="small" :bordered="false">一般</n-tag>
+              </n-radio>
+              <n-radio :value="4" class="priority-option">
+                <n-tag type="success" size="small" :bordered="false">不重要</n-tag>
+              </n-radio>
+            </n-space>
+          </n-radio-group>
+        </n-form-item>
+
+        <!-- 修改时间选择器的绑定 -->
+        <!-- 修改后的时间选择器 -->
+        <n-form-item label="开始时间" path="startTime">
+          <n-time-picker v-model:value="newTaskStartTimeValue" clearable placeholder="请选择时间" format="HH:mm:ss"
+            style="width: 100%;" />
+        </n-form-item>
+
+        <n-form-item label="截止时间" path="endTime">
+          <n-time-picker v-model:value="newTaskEndTimeValue" clearable placeholder="请选择时间" format="HH:mm:ss"
+            style="width: 100%;" />
+        </n-form-item>
+
+        <n-form-item label="标签" path="tags">
+          <n-input v-model:value="newTask.tags" placeholder="输入标签，用 -| 分隔，例如：-|工作-|紧急-|项目" clearable>
+            <template #suffix>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <n-icon size="18">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                      <path fill="currentColor"
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                  </n-icon>
+                </template>
+                使用 "-|" 分隔多个标签
+              </n-tooltip>
+            </template>
+          </n-input>
+        </n-form-item>
+
+        <n-form-item label="提醒" path="reminder">
+          <n-switch v-model:value="newTask.reminder" />
+          <span style="margin-left: 8px; font-size: 12px; color: #666;">
+            在截止时间前提醒我
+          </span>
+        </n-form-item>
+      </n-form>
+    </n-modal>
+
     <!-- 左侧抽屉 -->
-    <n-drawer
-      v-model:show="drawerVisible"
-      placement="left"
-      width="240"
-      :style="{ backgroundColor: isDark ? '#1a1d24' : '#fff' }"
-    >
+    <n-drawer v-model:show="drawerVisible" placement="left" width="240"
+      :style="{ backgroundColor: isDark ? '#1a1d24' : '#fff' }">
       <n-drawer-content title="" closable @close="drawerVisible = false">
         <!-- 用户信息区域 -->
         <div class="user-info">
-          <n-avatar
-            round
-            size="large"
-            :src="userInfo.avatar"
-            class="user-avatar"
-          />
+          <n-avatar round size="large" :src="userInfo.avatar" class="user-avatar" />
           <div class="user-details">
-            <n-text strong class="username">{{userInfo.username}}</n-text>
-            <n-text depth="3" class="user-email">{{userInfo.email}}</n-text>
+            <n-text strong class="username">{{ userInfo.username }}</n-text>
+            <n-text depth="3" class="user-email">{{ userInfo.email }}</n-text>
             <n-tag size="small" type="success" round class="user-status">在线</n-tag>
           </div>
         </div>
 
         <!-- 菜单列表 -->
-        <n-menu
-          :options="menuOptions"
-          :value="activeMenu"
-          @update:value="handleMenuSelect"
-          class="side-menu"
-        />
+        <n-menu :options="menuOptions" :value="activeMenu" @update:value="handleMenuSelect" class="side-menu" />
       </n-drawer-content>
     </n-drawer>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed, h } from 'vue';
-import { 
-  NLayout, 
-  NLayoutHeader, 
+import { ref, reactive, onMounted, computed, h, watch } from 'vue';
+import {
+  NLayout,
+  NLayoutHeader,
   NLayoutContent,
   NDrawer,
   NDrawerContent,
@@ -329,10 +410,19 @@ import {
   NTooltip,
   NProgress,
   NBadge,
+  NModal,
+  NForm,
+  NFormItem,
+  NRadioGroup,
+  NRadio,
+  NSwitch,
   useMessage
 } from 'naive-ui';
+import { useRouter } from 'vue-router';
+import service from '../../utils/request';
 
 const message = useMessage();
+const router = useRouter()
 
 // 主题状态
 const isDark = ref(false);
@@ -341,6 +431,13 @@ const isDark = ref(false);
 const drawerVisible = ref(false);
 const activeMenu = ref('dashboard');
 const taskListRef = ref(null);
+const draggedIndex = ref(-1)
+const dragOverIndex = ref(-1)
+const isDragging = ref(false)
+
+// 模态框状态
+const showAddModal = ref(false)
+const formRef = ref(null)
 
 // 用户信息
 const userInfo = reactive({});
@@ -365,18 +462,13 @@ const menuOptions = [
     icon: () => h('span', { class: 'menu-icon' }, '🎓')
   },
   {
-    label: '考试中心',
-    key: 'exams',
-    icon: () => h('span', { class: 'menu-icon' }, '📝')
-  },
-  {
     label: '学习资源',
     key: 'resources',
     icon: () => h('span', { class: 'menu-icon' }, '📁')
   },
   {
     label: '个人中心',
-    key: 'profile',
+    key: '/userManage',
     icon: () => h('span', { class: 'menu-icon' }, '👤')
   },
   {
@@ -392,68 +484,25 @@ const menuOptions = [
 ];
 
 // 今日任务数据
-const todayTasks = ref([
-  { 
-    id: 1, 
-    title: '完成Vue.js项目开发', 
-    completed: false, 
-    priority: 'error', 
-    priorityText: '紧急',
-    time: '09:00 - 12:00',
-    progress: 75
-  },
-  { 
-    id: 2, 
-    title: '学习React Hooks高级用法', 
-    completed: true, 
-    priority: 'warning', 
-    priorityText: '重要',
-    time: '13:00 - 15:00',
-    progress: 100
-  },
-  { 
-    id: 3, 
-    title: '准备项目周报', 
-    completed: false, 
-    priority: 'info', 
-    priorityText: '一般',
-    time: '15:00 - 16:00',
-    progress: 30
-  },
-  { 
-    id: 4, 
-    title: '代码审查会议', 
-    completed: false, 
-    priority: 'success', 
-    priorityText: '低',
-    time: '16:00 - 17:00',
-    progress: 0
-  },
-  { 
-    id: 5, 
-    title: '阅读技术文档', 
-    completed: false, 
-    priority: 'info', 
-    priorityText: '一般',
-    time: '19:00 - 20:00',
-    progress: 20
-  },
-  { 
-    id: 6, 
-    title: '学习TypeScript高级类型', 
-    completed: true, 
-    priority: 'warning', 
-    priorityText: '重要',
-    time: '20:00 - 21:00',
-    progress: 100
+const todayTasks = ref([]);
+
+// 任务详情展开状态
+const expandedTaskId = ref(null);
+
+// 切换任务详情展开状态
+const toggleTaskDetail = (task) => {
+  if (expandedTaskId.value === task.id) {
+    expandedTaskId.value = null;
+  } else {
+    expandedTaskId.value = task.id;
   }
-]);
+};
 
 // 快速访问选项
 const commonOptions = ref([
-  { 
-    id: 1, 
-    title: '学习课程', 
+  {
+    id: 1,
+    title: '学习课程',
     description: '在线学习各种编程课程',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '24', height: '24' }, [
       h('path', { fill: 'currentColor', d: 'M12 2L1 9l11 7 9-6.16V17H22V9M5 13.18V17h7v-3.18z' })
@@ -461,9 +510,9 @@ const commonOptions = ref([
     color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     action: 'courses'
   },
-  { 
-    id: 2, 
-    title: '在线考试', 
+  {
+    id: 2,
+    title: '在线考试',
     description: '参加在线考试和测试',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '24', height: '24' }, [
       h('path', { fill: 'currentColor', d: 'M5.5 7.5A1.5 1.5 0 0 1 7 9v6a1.5 1.5 0 0 1-1.5 1.5h-2A1.5 1.5 0 0 1 2 15V9a1.5 1.5 0 0 1 1.5-1.5h2m6-3A1.5 1.5 0 0 1 13 6v12a1.5 1.5 0 0 1-1.5 1.5h-2A1.5 1.5 0 0 1 8 18V6a1.5 1.5 0 0 1 1.5-1.5h2m6-3A1.5 1.5 0 0 1 19 3v18a1.5 1.5 0 0 1-1.5 1.5h-2A1.5 1.5 0 0 1 14 21V3a1.5 1.5 0 0 1 1.5-1.5h2z' })
@@ -471,9 +520,9 @@ const commonOptions = ref([
     color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     action: 'exams'
   },
-  { 
-    id: 3, 
-    title: '书籍资源', 
+  {
+    id: 3,
+    title: '书籍资源',
     description: '获取学习资料和电子书',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '24', height: '24' }, [
       h('path', { fill: 'currentColor', d: 'M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h5v16z' })
@@ -481,9 +530,9 @@ const commonOptions = ref([
     color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     action: 'books'
   },
-  { 
-    id: 4, 
-    title: '经验分享', 
+  {
+    id: 4,
+    title: '经验分享',
     description: '与其他学习者交流经验',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '24', height: '24' }, [
       h('path', { fill: 'currentColor', d: 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z' })
@@ -495,36 +544,36 @@ const commonOptions = ref([
 
 // 快捷功能
 const quickActions = ref([
-  { 
-    id: 1, 
-    title: '新建课程', 
+  {
+    id: 1,
+    title: '新建课程',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '20', height: '20' }, [
       h('path', { fill: 'currentColor', d: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z' })
     ]),
     color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     action: 'create-course'
   },
-  { 
-    id: 2, 
-    title: '上传文件', 
+  {
+    id: 2,
+    title: '上传文件',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '20', height: '20' }, [
       h('path', { fill: 'currentColor', d: 'M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z' })
     ]),
     color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     action: 'upload-file'
   },
-  { 
-    id: 3, 
-    title: '数据分析', 
+  {
+    id: 3,
+    title: '数据分析',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '20', height: '20' }, [
       h('path', { fill: 'currentColor', d: 'M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm8 14H5v-6h6v6zm2 0v-6h6v6h-6zm6-8H5V5h14v6z' })
     ]),
     color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     action: 'data-analysis'
   },
-  { 
-    id: 4, 
-    title: '系统备份', 
+  {
+    id: 4,
+    title: '系统备份',
     icon: () => h('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24', width: '20', height: '20' }, [
       h('path', { fill: 'currentColor', d: 'M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z' })
     ]),
@@ -535,7 +584,7 @@ const quickActions = ref([
 
 // 计算属性
 const completedTaskCount = computed(() => {
-  return todayTasks.value.filter(task => task.completed).length;
+  return todayTasks.value.filter(task => task.completed || task.isCompleted).length;
 });
 
 // 切换抽屉
@@ -546,12 +595,10 @@ const toggleDrawer = () => {
 // 菜单选择处理
 const handleMenuSelect = (key) => {
   activeMenu.value = key;
-  if (key === 'logout') {
+  if (key == "/userManage")
+    router.push(key)
+  if (key == "logout")
     handleLogout();
-  } else {
-    message.info(`切换到: ${key}`);
-    drawerVisible.value = false;
-  }
 };
 
 // 功能按钮处理
@@ -579,47 +626,448 @@ const handleQuickAction = (action) => {
   message.info(`执行: ${action.title}`);
 };
 
-// 任务管理
-const addNewTask = () => {
-  const newTask = {
-    id: todayTasks.value.length + 1,
-    title: '新的学习任务',
-    completed: false,
-    priority: 'info',
-    priorityText: '一般',
-    time: '待安排',
-    progress: 0
-  };
-  todayTasks.value.unshift(newTask);
-  message.success('任务已添加');
+// 新任务表单数据
+const newTask = reactive({
+  title: '',
+  content: '',
+  priority: 3, // 默认为一般优先级
+  startTime: '',
+  endTime: '',
+  tags: '', // 字符串格式
+  reminder: false,
+});
+
+// 工具函数：将标签数组转换为字符串
+const tagsArrayToString = (tagsArray) => {
+  if (!tagsArray || tagsArray.length === 0) {
+    return "";
+  }
+  return "-|" + tagsArray.join("-|");
 };
 
-const removeTask = (taskId) => {
-  todayTasks.value = todayTasks.value.filter(task => task.id !== taskId);
-  message.success('任务已删除');
+// 工具函数：将标签字符串转换为数组
+const tagsStringToArray = (tagsString) => {
+  if (!tagsString || tagsString.trim() === "") {
+    return [];
+  }
+  // 分割并过滤空值
+  return tagsString.split("-|")
+    .filter(tag => tag.trim() !== "")
+    .map(tag => tag.trim());
 };
 
-const clearCompleted = () => {
-  const initialLength = todayTasks.value.length;
-  todayTasks.value = todayTasks.value.filter(task => !task.completed);
-  const removedCount = initialLength - todayTasks.value.length;
-  message.success(`已清除 ${removedCount} 个已完成任务`);
+// 表单验证规则
+const rules = {
+  title: [
+    { required: true, message: '请输入任务标题', trigger: 'blur' },
+    { min: 1, max: 50, message: '标题长度在1-50个字符', trigger: 'blur' }
+  ],
+  content: [
+    { max: 200, message: '描述不能超过200个字符', trigger: 'blur' }
+  ],
+  priority: [
+    { required: true, type: 'number', message: '请选择优先级', trigger: 'change' }
+  ]
 };
 
+// 格式化时间
+// 格式化时间
+const formatTaskTime = (time) => {
+  if (!time) return '全天';
+
+  // 如果是 Date 对象
+  if (time instanceof Date) {
+    const hours = time.getHours().toString().padStart(2, '0');
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
+  // 如果是字符串
+  if (typeof time === 'string') {
+    // 提取时间部分
+    const match = time.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+    if (match) {
+      const hours = match[1].padStart(2, '0');
+      const minutes = match[2].padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+  }
+
+  return '全天';
+};
+// 格式化日期时间
+const formatDateTime = (dateTime) => {
+  if (!dateTime) return '';
+  const date = new Date(dateTime);
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
+
+// 获取优先级类型
+const getPriorityType = (priority) => {
+  switch (priority) {
+    case 1: return 'error';
+    case 2: return 'warning';
+    case 3: return 'info';
+    case 4: return 'success';
+    default: return 'info';
+  }
+};
+
+// 获取优先级文本
+const getPriorityText = (priority) => {
+  switch (priority) {
+    case 1: return '紧急';
+    case 2: return '重要';
+    case 3: return '一般';
+    case 4: return '不重要';
+    default: return '一般';
+  }
+};
+
+// 添加任务
+const handleAddTask = async () => {
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      try {
+        const u = JSON.parse(localStorage.getItem("user"));
+        const newTaskData = {
+          title: newTask.title,
+          content: newTask.content,
+          priority: newTask.priority,
+          startTime: newTask.startTime,
+          endTime: newTask.endTime,
+          tags: newTask.tags, // 保持字符串格式
+          userId: u.id
+        };
+
+        console.log('提交的任务数据:', newTaskData);
+
+        // 调用API
+        const response = await service.post("/api/user/task/add", newTaskData);
+
+        if (response.data && response.data.success) {
+          // 从响应中获取完整的任务数据
+          const savedTask = response.data.data;
+
+          // 为前端显示添加额外字段
+          savedTask.completed = savedTask.isCompleted || false;
+          savedTask.tagsArray = tagsStringToArray(savedTask.tags);
+          savedTask.priorityText = getPriorityText(savedTask.priority);
+
+          // 添加到列表顶部
+          todayTasks.value = [savedTask, ...todayTasks.value];
+
+          // 重置表单
+          resetForm();
+
+          // 关闭模态框
+          showAddModal.value = false;
+
+          message.success('任务添加成功');
+        } else {
+          message.error(response.data?.message || '添加任务失败');
+        }
+      } catch (error) {
+        console.error('添加失败:', error);
+        message.error('添加失败：' + (error.response?.data?.message || error.message));
+      }
+    } else {
+      message.error('请填写完整信息');
+    }
+  });
+};
+
+// 重置表单
+// 重置表单
+const resetForm = () => {
+  newTask.title = "";
+  newTask.content = "";
+  newTask.priority = 3;
+  newTask.startTime = "00:00:00";
+  newTask.endTime = "00:00:00";
+  newTask.tags = "";
+  newTask.reminder = false;
+};
+
+// 删除任务
+const removeTask = async (taskId) => {
+  try {
+    const response = await service.delete(`/api/user/task/delete/${taskId}`);
+    if (response.data && response.data.success) {
+      todayTasks.value = todayTasks.value.filter(task => task.id !== taskId);
+      message.success('任务已删除');
+    } else {
+      message.error(response.data?.message || '删除失败');
+    }
+  } catch (error) {
+    message.error('删除失败：' + error.message);
+  }
+};
+
+// 清除已完成任务
+const clearCompleted = async () => {
+  const completedTasks = todayTasks.value.filter(task => task.completed || task.isCompleted);
+  if (completedTasks.length === 0) {
+    message.info('没有已完成的任务');
+    return;
+  }
+
+  try {
+    // 可以批量删除，这里简单处理为逐个删除
+    for (const task of completedTasks) {
+      await service.delete(`/api/user/task/delete/${task.id}`);
+    }
+
+    const initialLength = todayTasks.value.length;
+    todayTasks.value = todayTasks.value.filter(task => !(task.completed || task.isCompleted));
+    const removedCount = initialLength - todayTasks.value.length;
+    message.success(`已清除 ${removedCount} 个已完成任务`);
+  } catch (error) {
+    message.error('清除失败：' + error.message);
+  }
+};
+
+// 拖拽相关函数
+const handleDragStart = (event, index) => {
+  draggedIndex.value = index
+  isDragging.value = true
+  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.setData('text/plain', index)
+  event.currentTarget.style.opacity = '0.5'
+  event.currentTarget.classList.add('dragging')
+}
+
+const handleDragOver = (event, index) => {
+  event.preventDefault()
+  event.dataTransfer.dropEffect = 'move'
+  if (dragOverIndex.value !== index) {
+    dragOverIndex.value = index
+  }
+}
+
+const handleDragEnter = (event, index) => {
+  event.preventDefault()
+  if (draggedIndex.value === index) return
+  event.currentTarget.classList.add('drag-over')
+}
+
+const handleDragLeave = (event) => {
+  event.currentTarget.classList.remove('drag-over')
+}
+
+const handleDrop = (event, dropIndex) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  if (draggedIndex.value === -1 || draggedIndex.value === dropIndex) {
+    resetDragState()
+    return
+  }
+
+  // 重新排序
+  const newTasks = [...todayTasks.value]
+  const draggedItem = newTasks[draggedIndex.value]
+
+  newTasks.splice(draggedIndex.value, 1)
+  newTasks.splice(dropIndex, 0, draggedItem)
+
+  todayTasks.value = newTasks
+  saveTaskOrder(newTasks)
+  resetDragState()
+}
+
+const handleDragEnd = (event) => {
+  resetDragState()
+  event.currentTarget.style.opacity = '1'
+  event.currentTarget.classList.remove('dragging')
+  const items = document.querySelectorAll('.task-item')
+  items.forEach(item => item.classList.remove('drag-over'))
+}
+
+const resetDragState = () => {
+  draggedIndex.value = -1
+  dragOverIndex.value = -1
+  isDragging.value = false
+}
+
+const saveTaskOrder = async (tasks) => {
+  try {
+    const orderData = tasks.map((task, index) => ({
+      id: task.id,
+      order: index
+    }))
+    console.log('保存任务顺序:', orderData)
+    // 如果需要保存到后端，可以调用API
+    // await service.post("/api/user/task/updateOrder", orderData)
+  } catch (error) {
+    console.error('保存失败:', error)
+    message.error('保存任务顺序失败')
+  }
+}
+
+// 拖拽手柄图标
+const DragHandleIcon = {
+  render() {
+    return h(
+      'svg',
+      {
+        xmlns: 'http://www.w3.org/2000/svg',
+        width: '16',
+        height: '16',
+        viewBox: '0 0 24 24',
+        fill: 'none',
+        stroke: 'currentColor',
+        'stroke-width': '2',
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        style: {
+          cursor: 'grab',
+          opacity: '0.4',
+          transition: 'opacity 0.2s',
+          marginRight: '8px',
+          flexShrink: '0'
+        },
+        onMouseenter(e) {
+          e.target.style.opacity = '0.7'
+        },
+        onMouseleave(e) {
+          e.target.style.opacity = '0.4'
+        }
+      },
+      [
+        h('circle', { cx: '9', cy: '5', r: '1' }),
+        h('circle', { cx: '9', cy: '12', r: '1' }),
+        h('circle', { cx: '9', cy: '19', r: '1' }),
+        h('circle', { cx: '15', cy: '5', r: '1' }),
+        h('circle', { cx: '15', cy: '12', r: '1' }),
+        h('circle', { cx: '15', cy: '19', r: '1' })
+      ]
+    )
+  }
+}
+
+// 图标组件
+const CalendarIcon = {
+  render() {
+    return h('svg', {
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: '16',
+      height: '16',
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': '2',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round'
+    }, [
+      h('rect', { x: '3', y: '4', width: '18', height: '18', rx: '2', ry: '2' }),
+      h('line', { x1: '16', y1: '2', x2: '16', y2: '6' }),
+      h('line', { x1: '8', y1: '2', x2: '8', y2: '6' }),
+      h('line', { x1: '3', y1: '10', x2: '21', y2: '10' })
+    ])
+  }
+}
+
+const ClockIcon = {
+  render() {
+    return h('svg', {
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: '16',
+      height: '16',
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': '2',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round'
+    }, [
+      h('circle', { cx: '12', cy: '12', r: '10' }),
+      h('polyline', { points: '12 6 12 12 16 14' })
+    ])
+  }
+}
+
+const TagIcon = {
+  render() {
+    return h('svg', {
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: '16',
+      height: '16',
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': '2',
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round'
+    }, [
+      h('path', { d: 'M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z' }),
+      h('line', { x1: '7', y1: '7', x2: '7.01', y2: '7' })
+    ])
+  }
+}
+
+// 加载任务
+// 加载任务
+const loadTasks = async () => {
+  try {
+    const u = JSON.parse(localStorage.getItem("user"));
+    const response = await service.get(`/api/user/task/get_all/${u.id}`);
+
+    if (response.data && Array.isArray(response.data)) {
+      // 处理数据
+      todayTasks.value = response.data.map(task => {
+        // 确保有默认值
+        return {
+          ...task,
+          completed: task.isCompleted || false,
+          tags: task.tags || '',
+          startTime: task.startTime || '',
+          endTime: task.endTime || '',
+          priority: task.priority || 3,
+          // 为前端显示添加字段
+          tagsArray: tagsStringToArray(task.tags || ''),
+          priorityText: getPriorityText(task.priority || 3)
+        };
+      });
+      console.log('加载任务成功:', todayTasks.value);
+    } else {
+      todayTasks.value = [];
+    }
+  } catch (error) {
+    console.error('加载任务失败:', error);
+    message.error("网络异常！");
+  }
+};
+
+// 退出登录
 const handleLogout = () => {
-  message.info('退出登录');
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  router.push("/login");
+  message.success("退出登录成功");
 };
 
-// 初始化主题
+// 初始化
 onMounted(() => {
   const theme = localStorage.getItem('theme') || 'light';
   isDark.value = theme === 'dark';
   document.documentElement.setAttribute('data-theme', theme);
   const u = JSON.parse(localStorage.getItem("user"));
-  userInfo.avatar = u.avatarUrl != null ? u.avatarUrl: "https://ts2.tc.mm.bing.net/th/id/OIP-C._MolZc9ybWaQGJMZP3FrzgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" ;
-  userInfo.username = u.username;
-  userInfo.email = u.email;
-  console.log(userInfo)
+  if (u) {
+    userInfo.avatar = u.avatarUrl || "https://ts2.tc.mm.bing.net/th/id/OIP-C._MolZc9ybWaQGJMZP3FrzgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3";
+    userInfo.username = u.username;
+    userInfo.email = u.email;
+    loadTasks();
+  } else {
+    router.push("/login");
+  }
 });
 </script>
 
@@ -702,13 +1150,16 @@ onMounted(() => {
   padding: 24px;
   overflow-y: auto;
   background-color: var(--content-bg);
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* 隐藏滚动条 */
 .main-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 .content-grid {
@@ -766,8 +1217,8 @@ onMounted(() => {
 .task-list-container {
   max-height: 300px;
   overflow: hidden;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .task-list {
@@ -776,19 +1227,58 @@ onMounted(() => {
   gap: 8px;
   overflow-y: auto;
   max-height: 300px;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .task-list::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
+/* 任务项基础样式 */
 .task-item {
   padding: 12px;
   border-radius: 8px;
-  background-color: var(--hover-bg);
-  border: 1px solid transparent;
+  background-color: var(--n-color-embedded);
+  border: 1px solid var(--n-border-color);
+  transition: all 0.3s ease;
+  cursor: move;
+  user-select: none;
+}
+
+.task-item:hover {
+  border-color: var(--n-primary-color);
+  box-shadow: 0 2px 8px var(--n-box-shadow-2);
+  transform: translateY(-1px);
+}
+
+/* 拖拽时样式 */
+.task-item.dragging {
+  opacity: 0.5;
+  border-color: var(--n-primary-color);
+  box-shadow: 0 4px 16px var(--n-box-shadow-3);
+  transform: rotate(2deg);
+  z-index: 10;
+}
+
+/* 拖拽目标样式 */
+.task-item.drag-over {
+  border-top: 2px solid var(--n-primary-color);
+  border-top-style: dashed;
+  margin-top: 2px;
+}
+
+/* 拖拽指示线 */
+.task-item.drag-over::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: var(--n-primary-color);
+  border-radius: 1px;
 }
 
 .task-content {
@@ -798,42 +1288,70 @@ onMounted(() => {
   margin-bottom: 8px;
 }
 
-.task-checkbox {
+.task-title {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.task-title {
-  font-size: 14px;
-  font-weight: 500;
-}
-
 .task-title.completed {
   text-decoration: line-through;
-  color: var(--text-color-secondary);
-  opacity: 0.7;
+  color: var(--n-text-color-disabled);
 }
 
 .task-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.task-priority {
-  cursor: pointer;
+.task-checkbox {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .task-time {
   font-size: 12px;
   min-width: 80px;
   text-align: right;
+  flex-shrink: 0;
+}
+
+.task-priority {
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .task-progress {
   margin-top: 4px;
+}
+
+/* 拖拽手柄悬停效果 */
+.task-item:hover .drag-handle svg {
+  opacity: 0.7;
+}
+
+/* 禁用选择文本 */
+.task-list * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 拖拽时的占位符 */
+.task-item.sortable-ghost {
+  opacity: 0.3;
+  background-color: var(--n-primary-color-hover);
 }
 
 .task-footer {
@@ -1049,7 +1567,7 @@ onMounted(() => {
     grid-template-rows: auto auto auto auto;
     gap: 16px;
   }
-  
+
   .today-tasks,
   .common-options,
   .system-status,
@@ -1057,31 +1575,31 @@ onMounted(() => {
     grid-column: 1;
     width: 100% !important;
   }
-  
+
   .today-tasks {
     grid-row: 1;
   }
-  
+
   .common-options {
     grid-row: 2;
   }
-  
+
   .system-status {
     grid-row: 3;
   }
-  
+
   .quick-actions {
     grid-row: 4;
   }
-  
+
   .main-content {
     padding: 16px;
   }
-  
+
   .header-center {
     margin: 0 20px;
   }
-  
+
   .page-title {
     display: none;
   }
@@ -1105,11 +1623,73 @@ body {
 
 /* 确保Naive UI组件也隐藏滚动条 */
 .n-drawer .n-drawer-content-wrapper {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .n-drawer .n-drawer-content-wrapper::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* 任务项样式 */
+.task-item {
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.task-item:hover {
+  background-color: #f9f9f9;
+}
+
+/* 任务详情展开区域样式 */
+.task-detail-expanded {
+  padding: 16px;
+  background-color: #fafafa;
+  border-top: 1px solid #e8e8e8;
+  animation: slideDown 0.3s ease;
+}
+
+.task-detail-content h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.task-detail-meta {
+  margin-top: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.detail-item .n-icon {
+  margin-right: 8px;
+  color: #999;
+}
+
+.task-detail-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+
+  to {
+    opacity: 1;
+    max-height: 300px;
+  }
 }
 </style>
