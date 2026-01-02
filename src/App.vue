@@ -15,7 +15,7 @@
           <!-- 右侧导航和按钮 -->
           <div class="header-right">
             <n-flex justify="end" align="center" :size="[20, 0]" :wrap="false" class="nav-buttons">
-              <n-button quaternary :type="isDark ? 'default' : 'default'" focusable="false">首页</n-button>
+              <n-button quaternary :type="isDark ? 'default' : 'default'" @click="goToHomePage" focusable="false">首页</n-button>
               <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false">服务</n-button>
               <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false">项目</n-button>
               <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false">关于</n-button>
@@ -64,9 +64,13 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { darkTheme, NGlobalStyle } from 'naive-ui';
+import { useRouter} from 'vue-router'
 
 // 响应式主题状态
 const isDark = ref(false);
+
+//路由
+const router = useRouter();
 
 // 自定义主题变量
 const themeOverrides = computed(() => ({
@@ -74,6 +78,12 @@ const themeOverrides = computed(() => ({
     primaryColor: isDark.value ? '#63e2b7' : '#18a058',
   }
 }));
+
+//去首页
+const goToHomePage = () => {
+  router.push("/welcome")
+}
+
 
 // 切换主题函数
 const toggleTheme = () => {

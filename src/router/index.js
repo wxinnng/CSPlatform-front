@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Welcome from '../pages/welcome/Welcome.vue'
 import MainPage from '../pages/mainPage/MainPage.vue'
 import Auth from '../pages/auth/Auth.vue'
+import UserManage from '../pages/userManage/userManage.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,11 @@ const router = createRouter({
             component: MainPage
         },
         {
+            name: 'userManage',
+            path: '/userManage',
+            component: UserManage
+        },
+        {
             name: 'auth',
             path: '/auth',
             component: Auth
@@ -26,7 +32,8 @@ const router = createRouter({
         {
             path: '/',
             redirect: '/welcome'
-        }
+        },
+        
     ]
 })
 

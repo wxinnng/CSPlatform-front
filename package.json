@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
+    "@vueuse/core": "^14.1.0",
     "axios": "^1.13.2",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

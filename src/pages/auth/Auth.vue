@@ -22,13 +22,7 @@
       <!-- 表单区域 -->
       <div class="auth-form">
         <!-- 标签切换 -->
-        <n-tabs
-          v-model:value="activeTab"
-          type="line"
-          size="large"
-          class="auth-tabs"
-          :on-update:value="handleTabChange"
-        >
+        <n-tabs v-model:value="activeTab" type="line" size="large" class="auth-tabs" :on-update:value="handleTabChange">
           <n-tab name="login">
             登录
           </n-tab>
@@ -40,23 +34,15 @@
         <!-- 登录表单 -->
         <transition name="fade" mode="out-in">
           <div v-if="isLogin" key="login" class="form-content">
-            <n-form
-              ref="loginFormRef"
-              :model="loginForm"
-              :rules="loginRules"
-              class="login-form"
-            >
+            <n-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
               <n-form-item path="email" label="邮箱地址">
-                <n-input
-                  v-model:value="loginForm.email"
-                  placeholder="请输入邮箱地址"
-                  size="medium"
-                  :input-props="{ autocomplete: 'username' }"
-                >
+                <n-input v-model:value="loginForm.email" placeholder="请输入邮箱地址" size="medium"
+                  :input-props="{ autocomplete: 'username' }">
                   <template #prefix>
                     <n-icon>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        <path fill="currentColor"
+                          d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                       </svg>
                     </n-icon>
                   </template>
@@ -64,18 +50,13 @@
               </n-form-item>
 
               <n-form-item path="password" label="密码">
-                <n-input
-                  v-model:value="loginForm.password"
-                  type="password"
-                  placeholder="请输入密码"
-                  size="medium"
-                  show-password-on="click"
-                  :input-props="{ autocomplete: 'current-password' }"
-                >
+                <n-input v-model:value="loginForm.password" type="password" placeholder="请输入密码" size="medium"
+                  show-password-on="click" :input-props="{ autocomplete: 'current-password' }">
                   <template #prefix>
                     <n-icon>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                        <path fill="currentColor"
+                          d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
                       </svg>
                     </n-icon>
                   </template>
@@ -92,13 +73,7 @@
                 </n-button>
               </div>
 
-              <n-button
-                type="primary"
-                size="medium"
-                :loading="loginLoading"
-                @click="handleLogin"
-                class="submit-btn"
-              >
+              <n-button type="primary" size="medium" :loading="loginLoading" @click="handleLogin" class="submit-btn">
                 登录
               </n-button>
             </n-form>
@@ -106,24 +81,15 @@
 
           <!-- 注册表单 -->
           <div v-else key="register" class="form-content">
-            <n-form
-              ref="registerFormRef"
-              :model="registerForm"
-              :rules="registerRules"
-              class="register-form"
-            >
+            <n-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="register-form">
               <n-form-item path="email" label="邮箱地址">
-                <n-input
-                  v-model:value="registerForm.email"
-                  placeholder="请输入邮箱地址"
-                  size="medium"
-                  :input-props="{ autocomplete: 'email' }"
-                  @blur="validateEmail"
-                >
+                <n-input v-model:value="registerForm.email" placeholder="请输入邮箱地址" size="medium"
+                  :input-props="{ autocomplete: 'email' }" @blur="validateEmail">
                   <template #prefix>
                     <n-icon>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        <path fill="currentColor"
+                          d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                       </svg>
                     </n-icon>
                   </template>
@@ -131,18 +97,13 @@
               </n-form-item>
 
               <n-form-item path="password" label="密码">
-                <n-input
-                  v-model:value="registerForm.password"
-                  type="password"
-                  placeholder="请输入密码"
-                  size="medium"
-                  show-password-on="click"
-                  :input-props="{ autocomplete: 'new-password' }"
-                >
+                <n-input v-model:value="registerForm.password" type="password" placeholder="请输入密码" size="medium"
+                  show-password-on="click" :input-props="{ autocomplete: 'new-password' }">
                   <template #prefix>
                     <n-icon>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                        <path fill="currentColor"
+                          d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
                       </svg>
                     </n-icon>
                   </template>
@@ -150,18 +111,12 @@
               </n-form-item>
 
               <n-form-item path="confirmPassword" label="确认密码">
-                <n-input
-                  v-model:value="registerForm.confirmPassword"
-                  type="password"
-                  placeholder="请再次输入密码"
-                  size="medium"
-                  show-password-on="click"
-                  :input-props="{ autocomplete: 'new-password' }"
-                >
+                <n-input v-model:value="registerForm.confirmPassword" type="password" placeholder="请再次输入密码"
+                  size="medium" show-password-on="click" :input-props="{ autocomplete: 'new-password' }">
                   <template #prefix>
                     <n-icon>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                       </svg>
                     </n-icon>
                   </template>
@@ -170,24 +125,14 @@
 
               <n-form-item path="verificationCode" label="邮箱验证码">
                 <div class="code-input-wrapper">
-                  <n-input-otp
-                    v-model:value="registerForm.verificationCode"
-                    :length="6"
-                    :mask="false"
-                    :loading="codeLoading"
-                    :input-props="{ autocomplete: 'one-time-code' }"
-                    class="verification-code-input"
-                    @finish="onCodeFinish"
-                    @update:value="onCodeUpdate"
-                  />
-                  <n-button
-                    type="primary"
-                    :disabled="!canSendCode || countdown > 0"
-                    :loading="sendingCode"
-                    @click="sendVerificationCode"
-                    class="send-code-btn"
-                    size="medium"
-                  >
+                  <n-input-otp v-model:value="registerForm.verificationCode" :length="6" :mask="false"
+                    :loading="codeLoading" :input-props="{
+                      autocomplete: 'one-time-code',
+                      type: 'text'  // 确保输入类型正确
+                    }" class="verification-code-input" @finish="onCodeFinish" @update:value="onCodeUpdate"
+                    @change="handleCodeChange" />
+                  <n-button type="primary" :disabled="!canSendCode || countdown > 0" :loading="sendingCode"
+                    @click="sendVerificationCode" class="send-code-btn" size="medium">
                     {{ countdown > 0 ? `${countdown}s后重试` : '获取验证码' }}
                   </n-button>
                 </div>
@@ -207,14 +152,8 @@
                 </n-button>
               </div>
 
-              <n-button
-                type="primary"
-                size="medium"
-                :loading="registerLoading"
-                :disabled="!agreedToTerms"
-                @click="handleRegister"
-                class="submit-btn"
-              >
+              <n-button type="primary" size="medium" :loading="registerLoading" :disabled="!agreedToTerms"
+                @click="handleRegister" class="submit-btn">
                 注册
               </n-button>
             </n-form>
@@ -227,12 +166,7 @@
         <n-text depth="3">
           {{ isLogin ? '还没有账号？' : '已有账号？' }}
         </n-text>
-        <n-button
-          text
-          type="primary"
-          @click="toggleMode"
-          class="switch-btn"
-        >
+        <n-button text type="primary" @click="toggleMode" class="switch-btn">
           {{ isLogin ? '立即注册' : '立即登录' }}
         </n-button>
       </div>
@@ -240,37 +174,17 @@
 
     <!-- 模态框 -->
     <!-- 忘记密码模态框 -->
-    <n-modal
-      v-model:show="showForgetPassword"
-      preset="dialog"
-      title="忘记密码"
-      positive-text="发送重置邮件"
-      negative-text="取消"
-      @positive-click="handleForgetPassword"
-      @negative-click="showForgetPassword = false"
-    >
-      <n-form
-        ref="forgetPasswordFormRef"
-        :model="forgetPasswordForm"
-        :rules="forgetPasswordRules"
-      >
+    <n-modal v-model:show="showForgetPassword" preset="dialog" title="忘记密码" positive-text="发送重置邮件" negative-text="取消"
+      @positive-click="handleForgetPassword" @negative-click="showForgetPassword = false">
+      <n-form ref="forgetPasswordFormRef" :model="forgetPasswordForm" :rules="forgetPasswordRules">
         <n-form-item path="email" label="邮箱地址">
-          <n-input
-            v-model:value="forgetPasswordForm.email"
-            placeholder="请输入注册邮箱"
-            size="medium"
-          />
+          <n-input v-model:value="forgetPasswordForm.email" placeholder="请输入注册邮箱" size="medium" />
         </n-form-item>
       </n-form>
     </n-modal>
 
     <!-- 用户协议模态框 -->
-    <n-modal
-      v-model:show="showTerms"
-      title="用户协议"
-      preset="card"
-      style="max-width: 500px;"
-    >
+    <n-modal v-model:show="showTerms" title="用户协议" preset="card" style="max-width: 500px;">
       <div class="terms-content">
         <h3>用户协议</h3>
         <p>欢迎使用Sing Platform，请您在使用前仔细阅读本协议...</p>
@@ -281,12 +195,7 @@
     </n-modal>
 
     <!-- 隐私政策模态框 -->
-    <n-modal
-      v-model:show="showPrivacy"
-      title="隐私政策"
-      preset="card"
-      style="max-width: 500px;"
-    >
+    <n-modal v-model:show="showPrivacy" title="隐私政策" preset="card" style="max-width: 500px;">
       <div class="privacy-content">
         <h3>隐私政策</h3>
         <p>我们尊重并保护所有使用服务用户的个人隐私权...</p>
@@ -300,18 +209,18 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted, onBeforeUnmount, watch } from 'vue';
-import { 
-  NForm, 
-  NFormItem, 
-  NInput, 
+import {
+  NForm,
+  NFormItem,
+  NInput,
   NInputOtp,
-  NButton, 
-  NTabs, 
-  NTab, 
-  NText, 
+  NButton,
+  NTabs,
+  NTab,
+  NText,
   NGradientText,
-  NIcon, 
-  NCheckbox, 
+  NIcon,
+  NCheckbox,
   NModal,
   useMessage,
   useLoadingBar
@@ -421,17 +330,24 @@ const registerRules = {
   ],
   confirmPassword: [
     { required: true, message: '请再次输入密码', trigger: 'blur' },
-    { 
+    {
       validator: (rule, value) => value === registerForm.password,
       message: '两次输入的密码不一致',
       trigger: 'blur'
     }
   ],
   verificationCode: [
-    { required: true, message: '请输入验证码', trigger: 'blur' },
-    { len: 6, message: '验证码必须为6位', trigger: 'blur' }
+    {
+      required: true,
+      message: '请输入验证码',
+      trigger: ['blur', 'change'], // 添加change触发
+      validator: (rule, value) => {
+        // 自定义验证逻辑
+        return value && value.length === 6
+      }
+    }
   ]
-};
+}
 
 const forgetPasswordRules = {
   email: [
@@ -445,6 +361,16 @@ const canSendCode = computed(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(registerForm.email);
 });
+
+// 验证码输入变化
+const handleCodeChange = (value) => {
+  console.log('验证码变化:', value)
+  // 自动触发验证
+  if (value.length === 6) {
+    onCodeFinish(value)
+  }
+}
+
 
 // 切换登录/注册
 const toggleMode = () => {
@@ -479,7 +405,7 @@ const sendVerificationCode = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // 开始倒计时
     startCountdown();
     message.success('验证码已发送到您的邮箱，请注意查收');
@@ -503,21 +429,29 @@ const startCountdown = (seconds = 60) => {
   }, 1000);
 };
 
-//TODO: 验证码输入完成
-const onCodeFinish = (value) => {
-  console.log('验证码输入完成:', value);
-  codeLoading.value = true;
-  
-  // 模拟验证码验证
-  setTimeout(() => {
-    codeLoading.value = false;
-    if (value === '123456') { // 这里应该是后端验证
-      message.success('验证码验证成功');
+// 验证码输入完成
+const onCodeFinish = async (value) => {
+  console.log('验证码输入完成:', value)
+  codeLoading.value = true
+
+  try {
+    // 这里应该调用后端验证验证码的接口
+    // 暂时模拟验证
+    if (value && value.length === 6) {
+      message.success('验证码格式正确')
+      codeLoading.value = false
+      return true
     } else {
-      message.error('验证码错误，请重新输入');
+      message.error('请输入6位验证码')
+      codeLoading.value = false
+      return false
     }
-  }, 500);
-};
+  } catch (error) {
+    message.error('验证码验证失败')
+    codeLoading.value = false
+    return false
+  }
+}
 
 // 验证码输入更新
 const onCodeUpdate = (value) => {
@@ -529,23 +463,23 @@ const handleLogin = async () => {
   try {
     // 1. 表单验证
     await loginFormRef.value?.validate()
-    
+
     // 2. 开始加载
     loginLoading.value = true
     loadingBar.start()
-    // console.log(loginForm)
-    // 3. 模拟API调用（实际项目中替换为真实API）
-    const response = await mockLoginAPI(loginForm)
-    console.log(response)
+
+    // 3. API调用
+    const response = await loginAPI(loginForm)
+
 
     // 4. 登录成功处理
     if (response.code == 200) {
       // 存储登录信息
       saveLoginData(response.data, rememberMe.value)
-      
+
       // 显示成功消息
       message.success('登录成功，正在跳转...')
-      
+
       // 延迟跳转，让用户看到成功消息
       setTimeout(() => {
         // 检查是否有重定向路径
@@ -555,10 +489,8 @@ const handleLogin = async () => {
     } else {
       message.error(response.message || '登录失败')
     }
-    
+
   } catch (error) {
-    console.error('登录失败:', error)
-    
     // 根据错误类型显示不同消息
     if (error.name === 'ValidationError') {
       message.error('表单验证失败，请检查输入')
@@ -569,7 +501,7 @@ const handleLogin = async () => {
     } else {
       message.error(error.message || '登录失败，请重试')
     }
-    
+
   } finally {
     // 5. 结束加载
     loginLoading.value = false
@@ -577,9 +509,8 @@ const handleLogin = async () => {
   }
 }
 
-// 模拟登录API（实际项目中使用真实的登录接口）
-// 模拟登录API（实际项目中使用真实的登录接口）
-const mockLoginAPI = async (formData) => {
+//登录API
+const loginAPI = async (formData) => {
   try {
     console.log(formData)
 
@@ -589,20 +520,18 @@ const mockLoginAPI = async (formData) => {
       rememberMe: formData.rememberMe || false
     })
     return response
-    
   } catch (error) {
     throw error
   }
 }
 
-
 // 保存登录数据
 const saveLoginData = (data, remember) => {
   const { token, refreshToken, user, expiresIn } = data
-  
+
   // 计算过期时间
   const expiryTime = new Date().getTime() + expiresIn * 1000
-  
+
   if (remember) {
     // 使用 localStorage（长期存储）
     localStorage.setItem('token', token)
@@ -617,17 +546,17 @@ const saveLoginData = (data, remember) => {
     sessionStorage.setItem('refresh_token', refreshToken)
     sessionStorage.setItem('user', JSON.stringify(user))
     sessionStorage.setItem('token_expiry', expiryTime.toString())
-    
+
     // 清理 localStorage 的相关数据
     localStorage.removeItem('token')
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('user')
     localStorage.removeItem('token_expiry')
   }
-  
+
   // 设置 token 过期定时提醒（可选）
   setupTokenExpiryReminder(expiryTime)
-  
+
   // 也可以设置自动刷新 token 的逻辑
   setupTokenAutoRefresh(refreshToken, expiryTime)
 }
@@ -636,11 +565,11 @@ const saveLoginData = (data, remember) => {
 const setupTokenExpiryReminder = (expiryTime) => {
   const now = new Date().getTime()
   const timeToExpiry = expiryTime - now
-  
+
   if (timeToExpiry > 0) {
     // 在过期前5分钟提醒
     const reminderTime = Math.max(timeToExpiry - 5 * 60 * 1000, 0)
-    
+
     setTimeout(() => {
       message.warning('登录状态即将过期，请及时保存工作')
     }, reminderTime)
@@ -651,7 +580,7 @@ const setupTokenExpiryReminder = (expiryTime) => {
 const setupTokenAutoRefresh = (refreshToken, expiryTime) => {
   const now = new Date().getTime()
   const refreshTime = expiryTime - 10 * 60 * 1000 // 过期前10分钟刷新
-  
+
   if (refreshTime > now) {
     setTimeout(async () => {
       try {
@@ -681,7 +610,22 @@ const checkRememberMe = () => {
     }
   }
 }
+// 注册API
+const registerAPI = async (formData) => {
+  try {
+    console.log('注册数据:', formData)
 
+    const response = await service.post('/api/user/auth/register', {
+      email: formData.email,
+      password: formData.password,
+      verificationCode: formData.verificationCode, // 确保传递验证码
+      rememberMe: formData.rememberMe || false
+    })
+    return response
+  } catch (error) {
+    throw error
+  }
+}
 
 // 处理注册
 const handleRegister = async () => {
@@ -690,44 +634,64 @@ const handleRegister = async () => {
       message.warning('请先阅读并同意用户协议和隐私政策');
       return;
     }
-    
+
+    // 手动验证验证码
+    if (!registerForm.verificationCode || registerForm.verificationCode.length !== 6) {
+      message.error('请输入6位验证码');
+      return;
+    }
+
+    // 表单验证
     await registerFormRef.value?.validate();
-    
+
     registerLoading.value = true;
     loadingBar.start();
-    
-    // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    message.success('注册成功，正在跳转...');
-    
-    // 切换到登录页
-    setTimeout(() => {
-      activeTab.value = 'login';
-      // 清空注册表单
-      Object.keys(registerForm).forEach(key => {
-        registerForm[key] = '';
-      });
-      agreedToTerms.value = false;
-    }, 1000);
-  } catch (errors) {
-    console.error('注册验证失败:', errors);
+
+    // 调用注册API
+    const response = await registerAPI({
+      email: registerForm.email,
+      password: registerForm.password,
+      verificationCode: registerForm.verificationCode, // 添加验证码
+      rememberMe: false // 注册时通常不需要记住我
+    });
+
+    if (response.code == 200) {
+      message.success('注册成功，正在跳转登录页面...');
+      // 切换到登录页
+      setTimeout(() => {
+        activeTab.value = 'login';
+        // 清空注册表单
+        Object.keys(registerForm).forEach(key => {
+          registerForm[key] = '';
+        });
+        agreedToTerms.value = false;
+      }, 1000);
+    } else {
+      message.error(response.message || '注册失败')
+    }
+  } catch (error) {
+    console.error('注册失败:', error)
+    // 显示具体的错误消息
+    if (error.message?.includes('ValidationError')) {
+      message.error('表单验证失败，请检查输入')
+    } else {
+      message.error(error.message || '注册失败，请重试')
+    }
   } finally {
     registerLoading.value = false;
     loadingBar.finish();
   }
 };
-
 // 处理忘记密码
 const handleForgetPassword = async () => {
   try {
     await forgetPasswordFormRef.value?.validate();
-    
+
     loadingBar.start();
-    
+
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     message.success('重置密码邮件已发送，请查收您的邮箱');
     showForgetPassword.value = false;
   } catch (errors) {
@@ -742,7 +706,7 @@ onMounted(() => {
   updateTheme();
   setupStorageListener();
   setupThemeChangeListener();
-  
+
   // 检查记住我
   if (localStorage.getItem('rememberMe') === 'true') {
     const savedEmail = localStorage.getItem('userEmail');
@@ -857,9 +821,12 @@ onBeforeUnmount(() => {
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
+
   50% {
     transform: translateY(-15px) rotate(180deg);
   }
@@ -927,6 +894,7 @@ onBeforeUnmount(() => {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1043,8 +1011,8 @@ onBeforeUnmount(() => {
   font-size: 12px;
   white-space: nowrap;
   flex-shrink: 0;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  /* background-color: var(--primary-color);
+  border-color: var(--primary-color); */
 }
 
 .send-code-btn:hover {
@@ -1192,20 +1160,20 @@ onBeforeUnmount(() => {
     padding: 20px 16px;
     max-width: 280px;
   }
-  
+
   .code-input-wrapper {
     flex-direction: column;
   }
-  
+
   .send-code-btn {
     width: 100%;
   }
-  
+
   .auth-background .shape-1,
   .auth-background .shape-2 {
     display: none;
   }
-  
+
   .logo-text {
     font-size: 18px;
   }
