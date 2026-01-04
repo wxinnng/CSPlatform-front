@@ -5,6 +5,7 @@ import Welcome from '../pages/welcome/Welcome.vue'
 import MainPage from '../pages/mainPage/MainPage.vue'
 import Auth from '../pages/auth/Auth.vue'
 import UserManage from '../pages/userManage/userManage.vue'
+import Resources from '../pages/resources/Resources.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
             name: 'auth',
             path: '/auth',
             component: Auth
+        },
+        {
+            name: 'resources',
+            path: '/resources',
+            component: Resources
         },
         {
             path: '/',

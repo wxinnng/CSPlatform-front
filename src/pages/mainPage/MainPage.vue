@@ -16,7 +16,6 @@
                 </n-icon>
               </template>
             </n-button>
-            <n-text strong class="page-title">学习任务管理系统</n-text>
           </div>
 
           <!-- 中间：全局搜索 -->
@@ -129,7 +128,7 @@
                   @dragleave="handleDragLeave($event)" @dragend="handleDragEnd" @drop="handleDrop($event, index)">
 
                   <div class="task-content">
-                    <n-checkbox v-model:checked="task.completed" class="task-checkbox" @click.stop>
+                    <n-checkbox v-model:checked="task.completed" @click="handleComplete(task.id)" class="task-checkbox" @click.stop>
                       <span class="task-title" :class="{ 'completed': task.completed }">
                         <n-icon size="16" class="drag-handle">
                           <DragHandleIcon />
@@ -330,31 +329,18 @@
         <!-- 修改时间选择器的绑定 -->
         <!-- 修改后的时间选择器 -->
         <n-form-item label="开始时间" path="startTime">
-          <n-time-picker v-model:value="newTaskStartTimeValue" clearable placeholder="请选择时间" format="HH:mm:ss"
-            style="width: 100%;" />
+          <n-date-picker v-model:value="newTask.startTime" clearable placeholder="请选择日期和时间" type="datetime"
+            format="yyyy-MM-dd HH:mm:ss" style="width: 100%;" />
         </n-form-item>
 
         <n-form-item label="截止时间" path="endTime">
-          <n-time-picker v-model:value="newTaskEndTimeValue" clearable placeholder="请选择时间" format="HH:mm:ss"
-            style="width: 100%;" />
+          <n-date-picker v-model:value="newTask.endTime" clearable placeholder="请选择日期和时间" type="datetime"
+            format="yyyy-MM-dd HH:mm:ss" style="width: 100%;" />
         </n-form-item>
-
         <n-form-item label="标签" path="tags">
-          <n-input v-model:value="newTask.tags" placeholder="输入标签，用 -| 分隔，例如：-|工作-|紧急-|项目" clearable>
-            <template #suffix>
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <n-icon size="18">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                      <path fill="currentColor"
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                    </svg>
-                  </n-icon>
-                </template>
-                使用 "-|" 分隔多个标签
-              </n-tooltip>
-            </template>
-          </n-input>
+          <n-dynamic-tags v-model:value="newTask.tags" :max="5" placeholder="输入标签，按回车添加" />
+          <!-- 使用计算属性，不需要 v-model 和 :value -->
+          <input type="hidden" :value="tagsArrayToString(newTaskTagsArray)" />
         </n-form-item>
 
         <n-form-item label="提醒" path="reminder">
@@ -462,8 +448,8 @@ const menuOptions = [
     icon: () => h('span', { class: 'menu-icon' }, '🎓')
   },
   {
-    label: '学习资源',
-    key: 'resources',
+    label: '我的文件',
+    key: '/resources',
     icon: () => h('span', { class: 'menu-icon' }, '📁')
   },
   {
@@ -594,11 +580,9 @@ const toggleDrawer = () => {
 
 // 菜单选择处理
 const handleMenuSelect = (key) => {
+
   activeMenu.value = key;
-  if (key == "/userManage")
-    router.push(key)
-  if (key == "logout")
-    handleLogout();
+  router.push(key)
 };
 
 // 功能按钮处理
@@ -631,9 +615,9 @@ const newTask = reactive({
   title: '',
   content: '',
   priority: 3, // 默认为一般优先级
-  startTime: '',
-  endTime: '',
-  tags: '', // 字符串格式
+  startTime: null,
+  endTime: null,
+  tags: [], // 字符串格式
   reminder: false,
 });
 
@@ -743,29 +727,25 @@ const handleAddTask = async () => {
           priority: newTask.priority,
           startTime: newTask.startTime,
           endTime: newTask.endTime,
-          tags: newTask.tags, // 保持字符串格式
+          tags: tagsArrayToString(newTask.tags), // 保持字符串格式
           userId: u.id
         };
-
+        console.log(newTask)
         console.log('提交的任务数据:', newTaskData);
 
         // 调用API
         const response = await service.post("/api/user/task/add", newTaskData);
 
-        if (response.data && response.data.success) {
-          // 从响应中获取完整的任务数据
-          const savedTask = response.data.data;
+
+        if (response.code == 200) {
 
           // 为前端显示添加额外字段
-          savedTask.completed = savedTask.isCompleted || false;
-          savedTask.tagsArray = tagsStringToArray(savedTask.tags);
-          savedTask.priorityText = getPriorityText(savedTask.priority);
-
-          // 添加到列表顶部
-          todayTasks.value = [savedTask, ...todayTasks.value];
+          loadTasks();
 
           // 重置表单
           resetForm();
+
+  
 
           // 关闭模态框
           showAddModal.value = false;
@@ -775,8 +755,7 @@ const handleAddTask = async () => {
           message.error(response.data?.message || '添加任务失败');
         }
       } catch (error) {
-        console.error('添加失败:', error);
-        message.error('添加失败：' + (error.response?.data?.message || error.message));
+        message.error('添加失败：');
       }
     } else {
       message.error('请填写完整信息');
@@ -790,17 +769,17 @@ const resetForm = () => {
   newTask.title = "";
   newTask.content = "";
   newTask.priority = 3;
-  newTask.startTime = "00:00:00";
-  newTask.endTime = "00:00:00";
-  newTask.tags = "";
+  newTask.startTime = null;
+  newTask.endTime = null;
+  newTask.tags = [];
   newTask.reminder = false;
 };
 
 // 删除任务
 const removeTask = async (taskId) => {
   try {
-    const response = await service.delete(`/api/user/task/delete/${taskId}`);
-    if (response.data && response.data.success) {
+    const response = await service.get(`/api/user/task/delete/${taskId}`);
+    if (response.code == 200) {
       todayTasks.value = todayTasks.value.filter(task => task.id !== taskId);
       message.success('任务已删除');
     } else {
@@ -820,10 +799,10 @@ const clearCompleted = async () => {
   }
 
   try {
-    // 可以批量删除，这里简单处理为逐个删除
-    for (const task of completedTasks) {
-      await service.delete(`/api/user/task/delete/${task.id}`);
-    }
+    // // 可以批量删除，这里简单处理为逐个删除
+    // for (const task of completedTasks) {
+    //   await service.delete(`/api/user/task/delete/${task.id}`);
+    // }
 
     const initialLength = todayTasks.value.length;
     todayTasks.value = todayTasks.value.filter(task => !(task.completed || task.isCompleted));
@@ -1045,6 +1024,17 @@ const loadTasks = async () => {
     message.error("网络异常！");
   }
 };
+
+//
+const handleComplete = async (id) => {
+  // console.log(id)
+  const response = await service.get(`/api/user/task/achieve/${id}`);
+  if(response.code == 200){
+    
+  }else{
+    message.error("网络异常！")
+  }
+} 
 
 // 退出登录
 const handleLogout = () => {

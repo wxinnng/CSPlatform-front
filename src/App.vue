@@ -15,7 +15,8 @@
           <!-- 右侧导航和按钮 -->
           <div class="header-right">
             <n-flex justify="end" align="center" :size="[20, 0]" :wrap="false" class="nav-buttons">
-              <n-button quaternary :type="isDark ? 'default' : 'default'" @click="goToHomePage" focusable="false">首页</n-button>
+              <n-button quaternary :type="isDark ? 'default' : 'default'" @click="goToHomePage"
+                focusable="false">首页</n-button>
               <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false">服务</n-button>
               <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false">项目</n-button>
               <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false">关于</n-button>
@@ -49,11 +50,13 @@
       <!-- 主内容区域 -->
       <n-layout class="main-layout">
         <n-layout-content class="content-area">
-          <n-message-provider>
-            <n-loading-bar-provider>
-              <router-view />
-            </n-loading-bar-provider>
-          </n-message-provider>
+          <n-dialog-provider>
+            <n-message-provider>
+              <n-loading-bar-provider>
+                <router-view />
+              </n-loading-bar-provider>
+            </n-message-provider>
+          </n-dialog-provider>
           <n-global-style />
         </n-layout-content>
       </n-layout>
@@ -64,7 +67,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { darkTheme, NGlobalStyle } from 'naive-ui';
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 // 响应式主题状态
 const isDark = ref(false);

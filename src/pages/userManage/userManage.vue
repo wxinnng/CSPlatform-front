@@ -485,8 +485,9 @@ const handleSaveEdit = async () => {
 
     try {
         isLoading.value = true
-        isError.value = false
         loadingBar.start()
+        isError.value = false
+
         saving.value = true
 
 
