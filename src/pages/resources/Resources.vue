@@ -173,15 +173,15 @@
                             class="file-icon">
                             <component :is="getFileIcon(getFileType(file.fileCategory))" />
                           </n-icon>
-                          <div v-if="file.fileCategory !== 1" class="file-extension">
+                          <div v-if="file.fileCategory !== 4" class="file-extension">
                             {{ getFileExtension(file.fileName) }}
                           </div>
                         </div>
 
                         <div class="file-info">
-                          <n-ellipsis class="file-name" :line-clamp="2">{{ file.fileName }}</n-ellipsis>
+                          <n-ellipsis class="file-name" :line-clamp="1">{{ file.fileName }}</n-ellipsis>
                           <n-space vertical class="file-meta">
-                            <n-text depth="3" class="file-size">{{ formatFileSize(file.fileSize) }}</n-text>
+                            <n-text depth="1" class="file-size">{{ formatFileSize(file.fileSize) }}</n-text>
                             <n-text depth="3" class="file-date">{{ formatDate(file.createTime) }}</n-text>
                           </n-space>
                         </div>
@@ -216,7 +216,7 @@
                   </n-gi>
                 </n-grid>
                 <!-- 空状态 -->
-                <div v-if="currentFiles.length === 0" style="margin-top: 15%;"class="empty-state">
+                <div v-if="currentFiles.length === 0" style="margin-top: 15%;" class="empty-state">
                   <n-empty description="当前文件夹为空">
                     <template #icon>
                       <n-icon>
@@ -320,29 +320,6 @@
           </n-space>
         </n-card>
       </n-modal>
-
-      <!-- 上传完成提示 -->
-      <n-modal v-model:show="showUploadCompleteModal">
-        <n-card style="width: 500px" title="上传完成" :bordered="false" size="huge">
-          <n-space vertical>
-            <n-space justify="center" style="margin-bottom: 20px;">
-              <n-icon size="48" color="#18a058">
-                <CheckmarkCircleOutline />
-              </n-icon>
-            </n-space>
-            <n-text align="center" style="display: block;">
-              文件上传完成！
-              <br>
-              成功: {{ successCount }} 个，失败: {{ failedCount }} 个
-            </n-text>
-            <n-space justify="center" style="margin-top: 20px;">
-              <n-button type="primary" @click="showUploadCompleteModal = false; refreshFiles();">
-                确定
-              </n-button>
-            </n-space>
-          </n-space>
-        </n-card>
-      </n-modal>
     </n-layout>
   </n-config-provider>
 </template>
@@ -365,7 +342,7 @@ import {
   ShareSocialOutline, RefreshOutline, FilterOutline, ArchiveOutline,
   DocumentTextOutline, ImageOutline, VideocamOutline, MusicalNotesOutline,
   FolderOutline, AppsOutline, CheckmarkCircleOutline, EyeOutline,
-  ArrowBackOutline, DocumentOutline, FolderOpenOutline, CloseCircleOutline
+  ArrowBackOutline, DocumentOutline, FolderOpenOutline, CloseCircleOutline, CodeOutline
 } from '@vicons/ionicons5'
 
 // 导入文件上传工具
@@ -404,8 +381,6 @@ const folderHistory = ref([])
 const uploadRef = ref(null)
 const isUploading = ref(false)
 const uploadTasks = ref([])
-const showUploadCompleteModal = ref(false)
-const uploadUrl = '/api/file/upload/one'
 
 // 文件数据
 const fileList = ref([])
@@ -462,15 +437,6 @@ const currentFiles = computed(() => {
     }
   })
 })
-
-const successCount = computed(() => {
-  return uploadTasks.value.filter(task => task.status === 'success').length
-})
-
-const failedCount = computed(() => {
-  return uploadTasks.value.filter(task => task.status === 'failed').length
-})
-
 // 菜单选项
 const menuOptions = [
   { label: '全部文件', key: 'all', icon: () => h(AppsOutline) },
@@ -531,7 +497,7 @@ const columns = [
 
 // 文件夹导航方法
 const enterFolder = async (folder) => {
-  if (folder.fileCategory !== 1) return
+  if (folder.fileCategory !== 4) return
 
   try {
     isLoading.value = true
@@ -657,7 +623,8 @@ const updateBreadcrumbs = (folder, isBack = false) => {
 
 // 文件操作方法
 const handleFileDblClick = (file) => {
-  if (file.fileCategory === 1) { // 文件夹
+  console.log(file.fileCategory)
+  if (file.fileCategory == 4) { // 文件夹
     enterFolder(file)
   } else {
     message.info(`打开文件: ${file.fileName}`)
@@ -959,7 +926,7 @@ const uploadSingleFile = async (task) => {
           isQuickUpload: true,
           result: result
         }
-        message.success(`文件 "${task.file.name}" 秒传成功`)
+        // message.success(`文件 "${task.file.name}" 秒传成功`)
       } else {
         successTasks[successTaskIndex] = {
           ...successTasks[successTaskIndex],
@@ -969,8 +936,10 @@ const uploadSingleFile = async (task) => {
           isQuickUpload: false,
           result: result
         }
+
         message.success(`文件 "${task.file.name}" 上传成功`)
       }
+      //重新加载该目录
       uploadTasks.value = successTasks
     }
 
@@ -992,6 +961,7 @@ const uploadSingleFile = async (task) => {
 
     message.error(`文件 "${task.file.name}" 上传失败：${error.message}`)
     throw error
+  } finally {
   }
 }
 
@@ -1032,15 +1002,58 @@ const changeView = (type) => { viewType.value = type }
 const handleUpload = () => {
   showUploadModal.value = true
 }
+//新建文件夹的名称
+// 新建文件夹的名称
+const newFolderName = ref("")
 
-const handleNewFolder = () => {
+const handleNewFolder = async () => {
   dialog.create({
-    title: '新建文件夹',
-    content: '请输入文件夹名称：',
-    positiveText: '创建',
+    title: "新建文件夹",
+    content: () => h('div', [
+      h('input', {
+        type: 'text',
+        value: newFolderName.value,
+        onInput: (e) => {
+          newFolderName.value = e.target.value
+        },
+        placeholder: '请输入文件夹名称',
+        style: 'width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;'
+      })
+    ]),
+    positiveText: '确定',
     negativeText: '取消',
-    onPositiveClick: () => {
-      message.success('文件夹创建成功')
+    draggable: true,
+    onPositiveClick: async () => {
+      if (!newFolderName.value.trim()) {
+        message.error('文件夹名称不能为空')
+        return false // 阻止对话框关闭
+      }
+
+      const f = {
+        userId: JSON.parse(localStorage.getItem("user")).id,
+        fileName: newFolderName.value,
+        fileSize: 0,
+        filePid: currentFolderInfo.value.fileId
+      }
+
+
+      const response = await service.post("/api/file/info/c_folder", f)
+
+      console.log(response)
+      if (response.code == 200) {
+        message.success(`创建文件夹成功: ${newFolderName.value}`)
+        // 这里可以添加实际的创建文件夹逻辑
+        newFolderName.value = ""
+        loadFolder(currentFolderInfo.value.fileId)
+        return true // 允许对话框关闭
+      } else {
+        message.error("操作失败，请稍后再试！")
+        return false;
+      }
+    },
+    onNegativeClick: () => {
+      newFolderName.value = ''
+      message.warning('已取消')
     }
   })
 }
@@ -1106,11 +1119,18 @@ const handlePreviewSingle = (file) => {
     message.info(`预览文件: ${file.fileName}`)
   }
 }
-
+const baseUrl = "http://localhost:9000/"
 const handleDownloadSingle = (file) => {
-  if (file.fileCategory === 1) {
+  if (file.fileCategory == 4) {
     message.info('文件夹不支持下载')
   } else {
+    // console.log(file.filePath)
+    const link = document.createElement('a');
+    link.href = baseUrl + file.filePath;
+    link.download = file.fileName || 'download'; // 设置下载文件名
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     message.success(`下载文件: ${file.fileName}`)
   }
 }
@@ -1130,26 +1150,62 @@ const handleDeleteSingle = (file) => {
   })
 }
 
-// 文件类型工具函数
-const getFileIcon = (type) => ({
-  document: DocumentTextOutline,
-  image: ImageOutline,
-  video: VideocamOutline,
-  audio: MusicalNotesOutline,
-  folder: FolderOutline
-}[type] || DocumentTextOutline)
-
+// 根据枚举值返回对应的文件类型
 const getFileType = (category) => {
-  // 根据 fileCategory 返回对应的文件类型
-  // 1: 文件夹, 2: 图片, 3: 文档, 4: 视频, 5: 音频, 其他: 文档
+  // 根据枚举返回对应的文件类型分类
+  // folder: 文件夹, image: 图片, document: 文档, video: 视频, audio: 音频, code: 代码文件
   switch (category) {
-    case 1: return 'folder'
-    case 2: return 'image'
-    case 3: return 'document'
-    case 4: return 'video'
-    case 5: return 'audio'
-    default: return 'document'
+    // 文件夹
+    case 4: return 'folder'
+
+    // 图片类型
+    case 5:  // gif
+    case 9:  // jpg
+    case 14: // png
+      return 'image'
+
+    // 视频类型
+    case 12: // mp4
+      return 'video'
+
+    // 音频类型
+    case 11: // mp3
+      return 'audio'
+
+    // 代码文件
+    case 1:  // c
+    case 2:  // cpp
+    case 3:  // css
+    case 6:  // html
+    case 7:  // java
+    case 8:  // js
+    case 10: // json
+    case 16: // sql
+    case 17: // txt
+    case 21: // md
+      return 'code'
+
+    // 文档类型
+    case 13: // pdf
+    case 15: // pptx
+    case 18: // docx
+    case 19: // doc
+    default:  // 其他类型
+      return 'document'
   }
+}
+
+// 文件类型图标映射
+const getFileIcon = (type) => {
+  const iconMap = {
+    document: DocumentTextOutline,
+    image: ImageOutline,
+    video: VideocamOutline,
+    audio: MusicalNotesOutline,
+    folder: FolderOutline,
+    code: CodeOutline, // 如果没有 CodeOutline 图标，可以用 DocumentTextOutline
+  }
+  return iconMap[type] || DocumentTextOutline
 }
 
 const getFileIconColor = (type) => ({
@@ -1194,7 +1250,9 @@ const loadRootFolder = async () => {
     })
 
     if (response.code === 200) {
-      fileList.value = response.data || []
+      fileList.value = response.data.children || []
+      currentFolderInfo.value = response.data.folderInfo
+      currentFolder.value = currentFolderInfo.value.fileId
     } else {
       message.error(response.data?.message || '加载失败')
     }
@@ -1212,11 +1270,11 @@ const loadFolder = async (folderId) => {
     isLoading.value = true
 
     const response = await service.get(`/api/file/info/folder/${folderId}`)
-    console.log(response.code)
+
+    console.log(response.data)
 
     if (response.code == 200) {
-      fileList.value = response.data.data || []
-      message.success('加载文件夹成功')
+      fileList.value = response.data || []
     } else {
       message.error(response.data?.message || '加载失败')
     }
@@ -1372,7 +1430,21 @@ onMounted(async () => {
   font-size: 13px;
   line-height: 1.3;
   margin-bottom: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
+  /* 添加以下属性 */
+  direction: rtl;
+  /* 从右到左 */
+  unicode-bidi: bidi-override;
+  text-align: left;
+  /* 覆盖之前的 text-align: center */
 }
 
 .file-meta {
