@@ -90,6 +90,18 @@ function calculateFileChunks(file, chunkSize = 5 * 1024 * 1024) {
 }
 
 /**
+ * 将文件字节大小转换为KB单位
+ * @param {number} bytes - 文件大小的字节数
+ * @param {number} decimals - 保留小数位数，默认2位
+ * @returns {string} 格式化后的文件大小（KB）
+ */
+function formatFileSizeToKB(bytes, decimals = 2) {
+    if (bytes === 0) return 0;
+    return Math.ceil(bytes / 1024);
+}
+
+
+/**
  * 上传单个分片
  * @param {Object} chunk - 分片信息
  * @param {Object} params - 上传参数
@@ -112,6 +124,7 @@ async function uploadChunk(chunk, params) {
     formData.append('fileMd5', fileMD5);
     formData.append('userId', JSON.parse(localStorage.getItem("user")).id);
     formData.append('filePid', filePid);
+    formData.append("totalSize", formatFileSizeToKB(file.size))
     
     // 调试：查看FormData内容
     console.log('上传分片参数:', {
@@ -120,7 +133,8 @@ async function uploadChunk(chunk, params) {
         fileName: fileName,
         fileMD5: fileMD5,
         userId: JSON.parse(localStorage.getItem("user")).id,
-        filePid: filePid
+        filePid: filePid,
+        totalSize: fileSize
     });
     
     try {
@@ -234,7 +248,7 @@ async function uploadFileInChunks(file, options = {}) {
             formData.append('fileMd5', fileMD5);
             formData.append('userId', userId.toString());
             formData.append('filePid', filePid);
-            
+            formData.append("totalSize",file.size)
             try {
                 const response = await service.post('/api/file/upload/one', formData);
                 const responseData = response.data || response;

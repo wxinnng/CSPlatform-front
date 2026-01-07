@@ -61,11 +61,10 @@
             </template>
             <n-space vertical align="center" :size="[12, 0]">
               <n-progress type="circle" :percentage="storageUsage" :stroke-width="6" :width="52" :height="52"
-                :status="storageUsage > 90 ? 'error' : storageUsage > 70 ? 'warning' : 'success'" />
+                :status="storageUsage > 90 ? 'error' : storageUsage > 70 ? 'warning' : 'success'" :indicator="false" />
               <n-text depth="3" class="storage-info">
-                {{ formatFileSize(usedStorage) }} / {{ formatFileSize(totalStorage) }}
+                {{ formatFileSize(usedStorage) }} / {{ totalStorage }}GB
               </n-text>
-              <n-button size="tiny" type="primary" ghost class="storage-btn">扩容</n-button>
             </n-space>
           </n-card>
         </n-layout-sider>
@@ -100,13 +99,16 @@
                   </template>
                   下载
                 </n-button>
-                <n-button :disabled="selectedFiles.length === 0" @click="handleDelete">
+                <!-- 在工具栏中 -->
+                <n-button :disabled="selectedFiles.length === 0"
+                  @click="activeMenu === 'trash' ? handlePermanentDelete() : handleRecycle()"
+                  :type="activeMenu === 'trash' ? 'error' : 'warning'">
                   <template #icon>
                     <n-icon>
                       <TrashOutline />
                     </n-icon>
                   </template>
-                  删除
+                  {{ activeMenu === 'trash' ? '删除' : '回收' }}
                 </n-button>
                 <n-button :disabled="selectedFiles.length === 0" @click="handleShare">
                   <template #icon>
@@ -116,13 +118,14 @@
                   </template>
                   分享
                 </n-button>
-                <n-button :disabled="selectedFiles.length === 0" @click="handlePreview" type="info">
+                <n-button :disabled="selectedFiles.length === 0"
+                  @click="activeMenu === 'trash' ? handleRestore() : handlePreview()" type="info">
                   <template #icon>
                     <n-icon>
                       <EyeOutline />
                     </n-icon>
                   </template>
-                  预览
+                  {{ activeMenu === 'trash' ? '恢复' : '预览' }}
                 </n-button>
                 <!-- 返回上级按钮 -->
                 <n-button v-if="currentFolder || breadcrumbs.length > 0" @click="goBack" type="default">
@@ -186,7 +189,7 @@
                           </n-space>
                         </div>
 
-                        <div class="file-actions" @click.stop>
+                        <div v-if="activeMenu !== 'trash'" class="file-actions" @click.stop>
                           <n-space vertical size="small">
                             <n-button circle size="tiny" type="primary" ghost @click="handleDownloadSingle(file)">
                               <n-icon>
@@ -325,7 +328,7 @@
 </template>
 
 <script setup>
-import { ref, computed, h, inject, onMounted, nextTick } from 'vue'
+import { ref, computed, h, inject, onMounted, nextTick, watch } from 'vue'
 import { useMessage, useDialog, useLoadingBar } from 'naive-ui'
 import {
   NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutSider, NLayoutContent,
@@ -366,9 +369,9 @@ const activeMenu = ref('all')
 const selectedFiles = ref([])
 const showUploadModal = ref(false)
 const sortBy = ref('name')
-const storageUsage = ref(65)
-const usedStorage = ref(65 * 1024 * 1024 * 1024)
-const totalStorage = ref(100 * 1024 * 1024 * 1024)
+const storageUsage = ref()
+const usedStorage = ref()
+const totalStorage = ref()
 const isLoading = ref(false)
 
 // 文件夹导航相关状态
@@ -407,9 +410,13 @@ const themeOverrides = computed(() => ({
   }
 }))
 
+
 // 计算当前显示的文件列表
 const currentFiles = computed(() => {
   let files = [...fileList.value]
+
+  console.log(activeMenu.value)
+  console.log(files)
 
   // 过滤搜索
   if (searchValue.value) {
@@ -419,7 +426,7 @@ const currentFiles = computed(() => {
   }
 
   // 过滤文件类型
-  if (activeMenu.value !== 'all') {
+  if (activeMenu.value !== 'trash' && activeMenu.value !== 'all') {
     files = files.filter(file => {
       const fileType = getFileType(file.fileCategory)
       return fileType === activeMenu.value
@@ -459,13 +466,37 @@ const sortOptions = [
 const columns = [
   { type: 'selection' },
   {
-    title: '名称', key: 'fileName',
-    render: (row) => h('div', { class: 'file-item' }, [
+    title: '名称',
+    key: 'fileName',
+    width: 300,
+    render: (row) => h('div', {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '8px 0',
+        height: '100%',
+        width: '100%'
+      }
+    }, [
       h(NIcon, {
         size: 20,
+        style: {
+          flexShrink: 0
+        },
         color: getFileIconColor(getFileType(row.fileCategory))
       }, () => h(getFileIcon(getFileType(row.fileCategory)))),
-      h('span', { class: 'file-name' }, row.fileName)
+      h('span', {
+        style: {
+          flex: 1,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          fontSize: '13px',
+          color: '#333',
+          lineHeight: '1.5'
+        }
+      }, row.fileName)
     ])
   },
   {
@@ -481,13 +512,13 @@ const columns = [
         text: true,
         type: 'primary',
         onClick: () => handleDownloadSingle(row),
-        disabled: row.fileCategory === 1
+        disabled: row.fileCategory === 4
       }, '下载'),
       h(NButton, {
         text: true,
         type: 'info',
         onClick: () => handlePreviewSingle(row),
-        disabled: row.fileCategory === 1
+        disabled: row.fileCategory === 4
       }, '预览'),
       h(NButton, { text: true, type: 'success', onClick: () => handleShareSingle(row) }, '分享'),
       h(NButton, { text: true, type: 'error', onClick: () => handleDeleteSingle(row) }, '删除')
@@ -516,12 +547,41 @@ const enterFolder = async (folder) => {
     updateBreadcrumbs(folder)
 
     // 加载文件夹内容
-    await loadFolder(folder.fileId)
+    if (activeMenu.value != 'trash') {
+      await loadFolder(folder.fileId)
+    } else {
+      await loadRecycleFilesById(folder.fileId)
+    }
 
     selectedFiles.value = []
   } catch (error) {
     console.error('进入文件夹失败:', error)
     message.error('加载文件夹失败')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+//通过ID获得回收文件
+const loadRecycleFilesById = async (folderId) => {
+  try {
+    isLoading.value = true
+    const response = await service.get(`/api/file/info/get_recycle_folder`, {
+      params: {
+        id: folderId,
+      }
+    })
+
+    console.log(response.data)
+
+    if (response.code == 200) {
+      fileList.value = response.data || []
+    } else {
+      message.error(response.data?.message || '加载失败')
+    }
+  } catch (error) {
+    console.error('加载文件夹失败:', error)
+    message.error('网络错误，请稍后重试')
   } finally {
     isLoading.value = false
   }
@@ -636,14 +696,38 @@ const handleRowDblClick = (row) => {
 }
 
 // 菜单变化处理
-const handleMenuChange = (key) => {
+// 菜单变化处理
+const handleMenuChange = async (key) => {
   if (key === 'trash') {
-    message.info('进入回收站')
-    // 这里可以添加加载回收站文件的逻辑
+    await loadRecycleFiles()
+  } else if (currentFolder.value) {
+    await loadFolder(currentFolder.value)
+  } else {
+    await loadRootFolder()
   }
-  // 其他菜单项切换会自动触发 computed 的过滤
+  // 清空已选文件
+  selectedFiles.value = []
 }
+// 加载回收站文件
+const loadRecycleFiles = async () => {
+  try {
+    isLoading.value = true
+    const response = await service.get("/api/file/info/get_recycle_files", {
+      params: {
+        userId: JSON.parse(localStorage.getItem("user")).id
+      }
+    })
 
+    if (response.code === 200) {
+      fileList.value = response.data || []
+    } else {
+
+    }
+  } catch (error) {
+  } finally {
+    isLoading.value = false
+  }
+}
 // 上传相关方法
 const handleBeforeUpload = (options) => {
   const { file } = options
@@ -1064,22 +1148,87 @@ const handleDownload = () => {
   }
 }
 
-const handleDelete = () => {
-  if (selectedFiles.value.length === 0) return
-
-  dialog.warning({
+const handlePermanentDelete = () => {
+  dialog.error({
     title: '确认删除',
     content: `确定要删除选中的 ${selectedFiles.value.length} 个文件吗？`,
     positiveText: '删除',
     negativeText: '取消',
-    onPositiveClick: () => {
-      fileList.value = fileList.value.filter(file => !selectedFiles.value.includes(file.fileId))
-      message.success('删除成功')
-      selectedFiles.value = []
+    onPositiveClick: async () => {
+      var response = await service.post("/api/file/info/delete_file", selectedFiles.value)
+      if (response.code === 200) {
+        fileList.value = fileList.value.filter(file => !selectedFiles.value.includes(file.fileId))
+        message.success('删除成功')
+        selectedFiles.value = []
+      } else {
+        message.error("操作失败，请稍后再试！")
+      }
+
     }
   })
 }
 
+
+const handleRecycle = () => {
+  if (selectedFiles.value.length === 0) return
+
+  dialog.warning({
+    title: '确认回收',
+    content: `确定要回收选中的 ${selectedFiles.value.length} 个文件吗？`,
+    positiveText: '回收',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      var response = null
+      if (selectedFiles.value.length === 1) {
+        //调用API删除
+        response = await service.get(`/api/file/info/recycle_file/${selectedFiles.value[0]}`)
+      } else {
+        console.log(selectedFiles.value)
+        //多个文件
+        response = await service.post('/api/file/info/recycle_files', selectedFiles.value)
+      }
+      if (response.code === 200) {
+        fileList.value = fileList.value.filter(file => !selectedFiles.value.includes(file.fileId))
+        message.success('回收成功')
+        selectedFiles.value = []
+      } else {
+        message.error("操作失败，请稍后再试！")
+      }
+
+    }
+  })
+}
+const handleRestore = () => {
+  if (selectedFiles.value.length === 0) return
+  dialog.warning({
+    title: '确认恢复',
+    content: `确定要恢复选中的 ${selectedFiles.value.length} 个文件吗？`,
+    positiveText: '恢复',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      let response = null
+      try {
+        // 多个文件批量恢复
+        console.log('批量恢复文件：', selectedFiles.value)
+        response = await service.post('/api/file/info/restore_file', selectedFiles.value)
+
+        if (response.code === 200) {
+          // 从文件列表中移除已恢复的文件
+          fileList.value = fileList.value.filter(file => !selectedFiles.value.includes(file.fileId))
+          message.success(`成功恢复 ${selectedFiles.value.length} 个文件`)
+
+          // 清空选中
+          selectedFiles.value = []
+        } else {
+          message.error(response.message || '恢复失败，请稍后再试！')
+        }
+      } catch (error) {
+        console.error('恢复文件失败：', error)
+        message.error('网络错误，请检查连接后重试')
+      }
+    }
+  })
+}
 const handleShare = () => {
   if (selectedFiles.value.length > 0) {
     message.info(`分享 ${selectedFiles.value.length} 个文件`)
@@ -1285,16 +1434,45 @@ const loadFolder = async (folderId) => {
     isLoading.value = false
   }
 }
+//用户空间使用情况
+const userFileSpaceUsed = async () => {
+
+  //用户信息
+  const u = JSON.parse(localStorage.getItem("user"))
+
+  const response = await service.get("/api/user/info/getAllAndUsedSpace", {
+    params: {
+      userId: u.id,
+    }
+  })
+  totalStorage.value = response.data.total_size
+  usedStorage.value = response.data.used_size
+
+  storageUsage.value = (formatFileSize(usedStorage.value) / totalStorage.value) * 100;
+  console.log(storageUsage.value)
+}
+
+
+const userFileRecycleFiles = async () => {
+  const response = await service.get("/api/file/info/get_recycle_files", {
+    params: {
+      userId: JSON.parse(localStorage.getItem("user")).id
+    }
+  })
+  return response.data
+}
 
 // 组件挂载
 onMounted(async () => {
   await loadRootFolder()
+  await userFileSpaceUsed()
+  await userFileRecycleFiles()
 })
 </script>
 
 <style scoped>
 .resources-container {
-  height: 100vh;
+  height: 90vh;
   background-color: var(--n-color);
   transition: all 0.3s ease;
 }
@@ -1427,9 +1605,9 @@ onMounted(async () => {
 
 .file-name {
   font-weight: 600;
-  font-size: 13px;
-  line-height: 1.3;
-  margin-bottom: 6px;
+  font-size: 20px;
+  line-height: 4;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
