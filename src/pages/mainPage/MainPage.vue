@@ -53,7 +53,7 @@
               </n-tooltip>
 
               <!-- 目标日历 -->
-              <n-tooltip placement="bottom" trigger="hover">
+              <!-- <n-tooltip placement="bottom" trigger="hover">
                 <template #trigger>
                   <n-button quaternary circle @click="showTargetCalendar" class="header-btn">
                     <template #icon>
@@ -67,7 +67,7 @@
                   </n-button>
                 </template>
                 目标日历
-              </n-tooltip>
+              </n-tooltip> -->
 
               <!-- 信封/消息 -->
               <n-tooltip placement="bottom" trigger="hover">
@@ -128,7 +128,8 @@
                   @dragleave="handleDragLeave($event)" @dragend="handleDragEnd" @drop="handleDrop($event, index)">
 
                   <div class="task-content">
-                    <n-checkbox v-model:checked="task.completed" @click="handleComplete(task.id)" class="task-checkbox" @click.stop>
+                    <n-checkbox v-model:checked="task.completed" @click="handleComplete(task.id)" class="task-checkbox"
+                      @click.stop>
                       <span class="task-title" :class="{ 'completed': task.completed }">
                         <n-icon size="16" class="drag-handle">
                           <DragHandleIcon />
@@ -370,7 +371,16 @@
         <n-menu :options="menuOptions" :value="activeMenu" @update:value="handleMenuSelect" class="side-menu" />
       </n-drawer-content>
     </n-drawer>
+    <n-modal v-model:show="studyRecordShowModal" class="studyRecordModal">
+      <n-card style="width: auto"  :bordered="false" size="huge" role="dialog" aria-modal="true">
+        <StudyRecord />
+
+      </n-card>
+    </n-modal>
   </div>
+
+
+
 </template>
 
 <script setup>
@@ -406,7 +416,7 @@ import {
 } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import service from '../../utils/request';
-
+import StudyRecord from './StudyRecord.vue';
 const message = useMessage();
 const router = useRouter()
 
@@ -424,6 +434,7 @@ const isDragging = ref(false)
 // 模态框状态
 const showAddModal = ref(false)
 const formRef = ref(null)
+const studyRecordShowModal = ref(false)
 
 // 用户信息
 const userInfo = reactive({});
@@ -587,7 +598,7 @@ const handleMenuSelect = (key) => {
 
 // 功能按钮处理
 const showLearningStatus = () => {
-  message.info('查看学习情况');
+  studyRecordShowModal.value = true;
 };
 
 const showTargetCalendar = () => {
@@ -745,7 +756,7 @@ const handleAddTask = async () => {
           // 重置表单
           resetForm();
 
-  
+
 
           // 关闭模态框
           showAddModal.value = false;
@@ -1029,12 +1040,12 @@ const loadTasks = async () => {
 const handleComplete = async (id) => {
   // console.log(id)
   const response = await service.get(`/api/user/task/achieve/${id}`);
-  if(response.code == 200){
-    
-  }else{
+  if (response.code == 200) {
+
+  } else {
     message.error("网络异常！")
   }
-} 
+}
 
 // 退出登录
 const handleLogout = () => {
@@ -1457,6 +1468,12 @@ onMounted(() => {
 
 .action-icon {
   color: white;
+}
+
+.studyRecordModal {
+  z-index: 1000;
+  width: auto;
+  height: auto;
 }
 
 .action-title {

@@ -3,7 +3,7 @@
     <!-- 固定Header部分 -->
     <n-layout-header bordered class="fixed-header">
       <div class="header-content">
-        <!-- 左侧Logo和标题 -->
+        <!-- 左侧Logo和标题 - 固定距离 -->
         <div class="header-left">
           <n-avatar size="medium" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" class="avatar" />
           <n-gradient-text type="danger" size="24" class="title">
@@ -11,20 +11,27 @@
           </n-gradient-text>
         </div>
 
-        <!-- 右侧导航和按钮 -->
+        <!-- 右侧导航和按钮 - 固定距离 -->
         <div class="header-right">
-          <n-flex justify="end" align="center" :size="[20, 0]" :wrap="false" class="nav-buttons">
-            <n-button quaternary :type="isDark ? 'default' : 'default'" focusable="false"
+          <n-flex justify="end" align="center" class="nav-buttons">
+            <!-- 首页按钮 -->
+            <n-button quaternary :type="isDark ? 'default' : 'default'" class="nav-button" focusable="false"
               @click="scrollTo('hero')">首页</n-button>
-            <n-button quaternary :type="isDark ? 'info' : 'info'" focusable="false"
+            
+            <!-- 服务按钮 -->
+            <n-button quaternary :type="isDark ? 'info' : 'info'" class="nav-button" focusable="false"
               @click="scrollTo('features')">服务</n-button>
-            <n-button quaternary :type="isDark ? 'primary' : 'primary'" focusable="false"
+            
+            <!-- 项目按钮 -->
+            <n-button quaternary :type="isDark ? 'primary' : 'primary'" class="nav-button" focusable="false"
               @click="scrollTo('projects')">项目</n-button>
-            <n-button quaternary :type="isDark ? 'warning' : 'warning'" focusable="false"
+            
+            <!-- 关于按钮 -->
+            <n-button quaternary :type="isDark ? 'warning' : 'warning'" class="nav-button" focusable="false"
               @click="scrollTo('about')">关于</n-button>
 
             <!-- 主题切换按钮 -->
-            <n-button quaternary :type="isDark ? 'error' : 'error'" @click="toggleTheme" class="theme-toggle-btn">
+            <n-button quaternary :type="isDark ? 'error' : 'error'" class="nav-button theme-toggle-btn" @click="toggleTheme">
               <template #icon>
                 <n-icon>
                   <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
@@ -41,7 +48,7 @@
             </n-button>
 
             <!-- GitHub链接 -->
-            <n-button quaternary type="tertiary" class="github-btn">
+            <n-button quaternary type="tertiary" class="nav-button github-btn">
               <a href="https://github.com/wxinnng/CSPlatform" target="_blank" rel="noopener noreferrer">GitHub</a>
             </n-button>
           </n-flex>
@@ -110,20 +117,8 @@
               这是一个基于Vue 3和Naive UI构建的现代Web应用平台。我们致力于提供优雅的用户界面和出色的用户体验。
             </n-p>
 
-            <!-- 装饰性分隔符 -->
-            <div class="hero-divider" :class="{ 'dark': isDark }">
-              <div class="divider-line"></div>
-              <div class="divider-icon">
-                <n-icon size="20">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                  </svg>
-                </n-icon>
-              </div>
-              <div class="divider-line"></div>
-            </div>
-
-            <n-space :size="20" class="hero-actions">
+            <!-- 修改：按钮直接放在描述下方，居中对齐 -->
+            <n-space justify="center" :size="20" class="hero-actions">
               <n-button type="primary" size="large" class="hero-btn" @click="scrollTo('features')">
                 开始探索
                 <template #icon>
@@ -140,108 +135,126 @@
               </n-button>
             </n-space>
 
+            <!-- 装饰性分隔符 - 移动到按钮下方 -->
+            <div class="hero-divider" :class="{ 'dark': isDark }">
+              <div class="divider-line"></div>
+              <div class="divider-icon">
+                <n-icon size="20">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                  </svg>
+                </n-icon>
+              </div>
+              <div class="divider-line"></div>
+            </div>
+
             <!-- 滚动提示 -->
-            <div class="scroll-hint" :class="{ 'dark': isDark }" @click="scrollTo('features')">
+            <!-- <div class="scroll-hint" :class="{ 'dark': isDark }" @click="scrollTo('features')">
               <span>向下滚动</span>
               <n-icon class="bounce">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
                   <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
                 </svg>
               </n-icon>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>
 
       <!-- Features Section -->
       <section id="features" class="features-section">
-        <n-h2 prefix="bar" align-text :type="isDark ? 'info' : 'primary'"
-          style="font-size: 2.5rem; margin-bottom: 3rem;">
-          核心服务
-        </n-h2>
+        <div class="section-container">
+          <n-h2 prefix="bar" align-text :type="isDark ? 'info' : 'primary'"
+            class="section-title">
+            核心服务
+          </n-h2>
 
-        <div class="features-grid">
-          <n-card v-for="feature in features" :key="feature.title" hoverable class="feature-card" :bordered="!isDark"
-            :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff' }">
-            <template #cover>
-              <n-image :src="feature.image" height="200" object-fit="cover" preview-disabled />
-            </template>
-            <n-h3 :type="feature.color">
-              {{ feature.title }}
-            </n-h3>
-            <n-p>
-              {{ feature.description }}
-            </n-p>
-            <template #action>
-              <n-button quaternary :type="feature.color">
-                了解更多
-              </n-button>
-            </template>
-          </n-card>
+          <div class="features-grid">
+            <n-card v-for="feature in features" :key="feature.title" hoverable class="feature-card" :bordered="!isDark"
+              :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff' }">
+              <template #cover>
+                <n-image :src="feature.image" height="200" object-fit="cover" preview-disabled />
+              </template>
+              <n-h3 :type="feature.color">
+                {{ feature.title }}
+              </n-h3>
+              <n-p>
+                {{ feature.description }}
+              </n-p>
+              <template #action>
+                <n-button quaternary :type="feature.color">
+                  了解更多
+                </n-button>
+              </template>
+            </n-card>
+          </div>
         </div>
       </section>
 
       <!-- About Section -->
       <section id="about" class="about-section">
-        <n-h2 prefix="bar" align-text :type="isDark ? 'warning' : 'error'"
-          style="font-size: 2.5rem; margin-bottom: 2rem;">
-          关于我们
-        </n-h2>
+        <div class="section-container">
+          <n-h2 prefix="bar" align-text :type="isDark ? 'warning' : 'error'"
+            class="section-title">
+            关于我们
+          </n-h2>
 
-        <n-card :bordered="!isDark"
-          :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff', maxWidth: '800px', margin: '0 auto' }">
-          <n-space vertical :size="20">
-            <n-p style="font-size: 1.1rem; line-height: 1.8;">
-              我们是一支专注于Web技术的前端团队，致力于通过现代化的技术栈为用户提供卓越的数字体验。我们相信优秀的设计和代码能够创造价值。
-            </n-p>
+          <n-card :bordered="!isDark" class="about-card"
+            :style="{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#fff' }">
+            <n-space vertical :size="20">
+              <n-p style="font-size: 1.1rem; line-height: 1.8; text-align: center;">
+                我们是一支专注于Web技术的前端团队，致力于通过现代化的技术栈为用户提供卓越的数字体验。我们相信优秀的设计和代码能够创造价值。
+              </n-p>
 
-            <n-space :size="20">
-              <n-statistic label="项目完成" :value="42">
-                <template #suffix>
-                  <n-text depth="3">个</n-text>
-                </template>
-              </n-statistic>
-              <n-statistic label="团队成员" :value="8">
-                <template #suffix>
-                  <n-text depth="3">人</n-text>
-                </template>
-              </n-statistic>
-              <n-statistic label="用户满意度" :value="98.7">
-                <template #suffix>
-                  <n-text depth="3">%</n-text>
-                </template>
-              </n-statistic>
+              <n-space justify="center" :size="20" wrap>
+                <n-statistic label="项目完成" :value="42">
+                  <template #suffix>
+                    <n-text depth="3">个</n-text>
+                  </template>
+                </n-statistic>
+                <n-statistic label="团队成员" :value="8">
+                  <template #suffix>
+                    <n-text depth="3">人</n-text>
+                  </template>
+                </n-statistic>
+                <n-statistic label="用户满意度" :value="98.7">
+                  <template #suffix>
+                    <n-text depth="3">%</n-text>
+                  </template>
+                </n-statistic>
+              </n-space>
+
+              <n-divider />
+
+              <n-space justify="center" :size="30" wrap>
+                <n-button v-for="(contact, index) in contacts" :key="index" :type="contact.type" quaternary
+                  :icon-placement="contact.icon" @click="contact.action">
+                  {{ contact.label }}
+                </n-button>
+              </n-space>
             </n-space>
-
-            <n-divider />
-
-            <n-space justify="center" :size="30">
-              <n-button v-for="(contact, index) in contacts" :key="index" :type="contact.type" quaternary
-                :icon-placement="contact.icon" @click="contact.action">
-                {{ contact.label }}
-              </n-button>
-            </n-space>
-          </n-space>
-        </n-card>
+          </n-card>
+        </div>
       </section>
 
       <!-- Footer -->
       <footer class="footer-section">
-        <n-divider />
-        <n-space vertical align="center" :size="20">
-          <n-text depth="3">
-            © 2026 Sing Platform. All rights reserved.
-          </n-text>
-          <n-space :size="20">
-            <n-text depth="3">Built with Vue 3 & Naive UI</n-text>
-            <n-text depth="3">Powered by WangXing</n-text>
+        <div class="section-container">
+          <n-divider />
+          <n-space vertical align="center" :size="20">
+            <n-text depth="3">
+              © 2026 Sing Platform. All rights reserved.
+            </n-text>
+            <n-space :size="20" wrap>
+              <n-text depth="3">Built with Vue 3 & Naive UI</n-text>
+              <n-text depth="3">Powered by WangXing</n-text>
+            </n-space>
           </n-space>
-        </n-space>
+        </div>
       </footer>
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import {
@@ -459,7 +472,6 @@ const openGitHub = () => {
   height: 60px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
   box-sizing: border-box;
   border-bottom: 1px solid var(--n-border-color);
   background-color: var(--n-color);
@@ -468,7 +480,7 @@ const openGitHub = () => {
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
-/* Header内容容器 */
+/* Header内容容器 - 修改为固定padding */
 .header-content {
   width: 100%;
   max-width: 1200px;
@@ -477,14 +489,18 @@ const openGitHub = () => {
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  padding: 0 40px; /* 固定左右内边距 */
+  box-sizing: border-box;
 }
 
-/* 左侧Logo和标题 */
+/* 左侧Logo和标题 - 固定间距 */
 .header-left {
-  display: flex;
+  /* display: flex; */
   align-items: center;
-  gap: 12px;
+  gap: 16px; /* 固定图标和标题间距 */
   height: 100%;
+  padding-right: 95%;
+  flex-shrink: 0; /* 防止压缩 */
 }
 
 .avatar {
@@ -497,37 +513,43 @@ const openGitHub = () => {
   font-weight: bold;
   font-size: 20px;
   white-space: nowrap;
+  margin: 0;
+  padding: 0;
 }
 
-/* 右侧导航按钮 */
+/* 右侧导航按钮 - 固定间距 */
 .header-right {
   display: flex;
   align-items: center;
   height: 100%;
+  flex-shrink: 0; /* 防止压缩 */
 }
 
 .nav-buttons {
   display: flex;
   align-items: center;
   height: 100%;
+  gap: 8px; /* 固定按钮间距 */
+  margin: 0;
+  padding: 0;
 }
 
-.nav-buttons .n-button {
+.nav-button {
   height: 36px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 12px;
   white-space: nowrap;
+  min-width: auto;
+  flex-shrink: 0;
+  margin: 0;
 }
 
 .theme-toggle-btn {
-  height: 36px;
   padding: 0 12px;
-  min-width: auto;
 }
 
 .github-btn {
-  height: 36px;
   padding: 0 12px;
 }
 
@@ -541,13 +563,34 @@ const openGitHub = () => {
 
 /* 可滚动内容区域 */
 .scrollable-content {
-  padding-top: 60px;
+  padding-top: 10px;
   min-height: calc(100vh - 60px);
   background-color: var(--n-color-embedded);
   transition: background-color 0.3s ease;
   margin: 0;
   overflow-x: hidden;
   position: relative;
+}
+
+/* 通用Section容器 - 新增 */
+.section-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Section标题样式 */
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  width: 100%;
+  text-align: center;
 }
 
 /* Hero Section 新样式 */
@@ -808,6 +851,10 @@ const openGitHub = () => {
   max-width: 800px;
   margin: 0 auto;
   padding: 40px 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-title {
@@ -815,6 +862,8 @@ const openGitHub = () => {
   margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
+  text-align: center;
+  width: 100%;
 }
 
 .title-highlight {
@@ -837,25 +886,54 @@ const openGitHub = () => {
 
 .hero-subtitle {
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   opacity: 0.9;
+  text-align: center;
+  width: 100%;
 }
 
 .hero-description {
   font-size: 1.2rem;
   max-width: 600px;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 2rem; /* 减少下方边距 */
   line-height: 1.6;
   opacity: 0.8;
+  text-align: center;
+  width: 100%;
 }
 
-/* 装饰性分隔符 */
+/* 修改：按钮区域 - 直接放在描述下方，居中对齐 */
+.hero-actions {
+  margin-bottom: 2rem; /* 减少下方边距 */
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.hero-btn {
+  padding: 0 32px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 装饰性分隔符 - 移动到按钮下方 */
 .hero-divider {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin: 2.5rem auto;
+  margin: 2rem auto 3rem; /* 增加下方边距 */
   width: 100%;
   max-width: 400px;
 }
@@ -885,25 +963,6 @@ const openGitHub = () => {
   opacity: 0.8;
 }
 
-/* 按钮区域 */
-.hero-actions {
-  margin-bottom: 3rem;
-}
-
-.hero-btn {
-  padding: 0 32px;
-  height: 48px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.hero-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
 /* 滚动提示 */
 .scroll-hint {
   display: flex;
@@ -918,6 +977,7 @@ const openGitHub = () => {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 1rem;
 }
 
 .scroll-hint.dark {
@@ -976,6 +1036,11 @@ const openGitHub = () => {
   position: relative;
   z-index: 1;
   background: var(--n-color-embedded);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
 .features-grid {
@@ -985,16 +1050,43 @@ const openGitHub = () => {
   width: 100%;
   max-width: 1200px;
   margin-top: 30px;
+  justify-content: center;
 }
 
 .feature-card {
   height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card .n-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card h3,
+.feature-card p {
+  text-align: center;
+}
+
+.feature-card h3 {
+  margin-bottom: 1rem;
+}
+
+.feature-card .n-card__action {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 /* About Section */
@@ -1004,6 +1096,29 @@ const openGitHub = () => {
   position: relative;
   z-index: 1;
   background: var(--n-color-embedded);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.about-card {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-card .n-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-card .n-card__content > * {
+  width: 100%;
+  text-align: center;
 }
 
 /* Footer Section */
@@ -1015,13 +1130,30 @@ const openGitHub = () => {
   min-height: auto;
   position: relative;
   z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* 响应式设计 */
+@media (max-width: 1200px) {
+  .header-content {
+    padding: 0 30px;
+  }
+  
+  .section-container {
+    max-width: 1000px;
+  }
+}
+
 @media (max-width: 768px) {
   .fixed-header {
     height: 56px;
-    padding: 0 12px;
+  }
+  
+  .header-content {
+    padding: 0 20px; /* 移动端保持适当间距 */
   }
 
   .scrollable-content {
@@ -1044,6 +1176,11 @@ const openGitHub = () => {
 
   .hero-description {
     font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
   }
 
   .hero-background .shape-1,
@@ -1069,16 +1206,94 @@ const openGitHub = () => {
 
   .features-grid {
     grid-template-columns: 1fr;
+    max-width: 400px;
   }
 
-  .nav-buttons .n-button:not(.theme-toggle-btn):not(.github-btn) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .nav-buttons {
+    gap: 4px;
+  }
+  
+  .nav-button {
+    padding: 0 8px;
+    font-size: 13px;
+  }
+  
+  .theme-toggle-btn span {
     display: none;
   }
+  
+  .theme-toggle-btn {
+    padding: 0 8px;
+    min-width: 40px;
+  }
+  
+  .github-btn span {
+    display: none;
+  }
+  
+  .github-btn {
+    padding: 0 8px;
+    min-width: 40px;
+  }
+  
+  .github-btn a {
+    justify-content: center;
+  }
+  
+  .about-card {
+    max-width: 100%;
+  }
+}
 
-  .hero-btn {
-    padding: 0 20px;
-    height: 44px;
-    font-size: 14px;
+@media (max-width: 480px) {
+  .header-content {
+    padding: 0 12px;
+  }
+  
+  .header-left {
+    gap: 8px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .nav-buttons .nav-button:nth-child(1),
+  .nav-buttons .nav-button:nth-child(2),
+  .nav-buttons .nav-button:nth-child(3),
+  .nav-buttons .nav-button:nth-child(4) {
+    display: none;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+  
+  .hero-description {
+    font-size: 0.9rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
   }
 }
 </style>

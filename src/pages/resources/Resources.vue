@@ -99,6 +99,7 @@
                   </template>
                   下载
                 </n-button>
+
                 <!-- 在工具栏中 -->
                 <n-button :disabled="selectedFiles.length === 0"
                   @click="activeMenu === 'trash' ? handlePermanentDelete() : handleRecycle()"
@@ -110,6 +111,7 @@
                   </template>
                   {{ activeMenu === 'trash' ? '删除' : '回收' }}
                 </n-button>
+
                 <n-button :disabled="selectedFiles.length === 0" @click="handleShare">
                   <template #icon>
                     <n-icon>
@@ -323,12 +325,20 @@
           </n-space>
         </n-card>
       </n-modal>
+
+      <!-- 文件预览模态框 -->
+      <n-modal v-model:show="showPreviewModal" preset="card" :style="{ width: '50vw', height: 'auto' }"
+        :bordered="false" size="huge" class="preview-modal">
+        <FilePreview v-if="selectedFile" :file-info="selectedFile" />
+      </n-modal>
+
     </n-layout>
   </n-config-provider>
 </template>
 
 <script setup>
-import { ref, computed, h, inject, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, h, inject, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { useMessage, useDialog, useLoadingBar } from 'naive-ui'
 import {
   NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NLayoutSider, NLayoutContent,
@@ -352,6 +362,11 @@ import {
 import fileUtils from '../../utils/file.js'
 import service from '../../utils/request.js'
 
+import FilePreview from './FilePreview.vue'
+
+//路由
+const router = useRouter()
+
 // 从父组件接收主题状态
 const globalTheme = inject('globalTheme')
 const isDark = globalTheme || ref(false)
@@ -374,7 +389,11 @@ const usedStorage = ref()
 const totalStorage = ref()
 const isLoading = ref(false)
 
-// 文件夹导航相关状态
+//预览
+const showPreviewModal = ref(false)
+const selectedFile = ref(null)
+
+// 文件夹导航相关状态 - 修复核心问题
 const currentFolder = ref(null)
 const currentFolderInfo = ref(null)
 const breadcrumbs = ref([])
@@ -410,13 +429,9 @@ const themeOverrides = computed(() => ({
   }
 }))
 
-
 // 计算当前显示的文件列表
 const currentFiles = computed(() => {
   let files = [...fileList.value]
-
-  console.log(activeMenu.value)
-  console.log(files)
 
   // 过滤搜索
   if (searchValue.value) {
@@ -444,6 +459,7 @@ const currentFiles = computed(() => {
     }
   })
 })
+
 // 菜单选项
 const menuOptions = [
   { label: '全部文件', key: 'all', icon: () => h(AppsOutline) },
@@ -526,28 +542,30 @@ const columns = [
   }
 ]
 
-// 文件夹导航方法
+// 修复文件夹导航方法
 const enterFolder = async (folder) => {
   if (folder.fileCategory !== 4) return
 
   try {
     isLoading.value = true
 
+    // 保存当前状态到历史记录
     if (currentFolder.value) {
       folderHistory.value.push({
         id: currentFolder.value,
-        info: currentFolderInfo.value
+        info: { ...currentFolderInfo.value },
+        breadcrumbs: [...breadcrumbs.value]
       })
     }
 
     currentFolder.value = folder.fileId
     currentFolderInfo.value = folder
 
-    // 更新面包屑
+    // 更新面包屑 - 修复重复添加问题
     updateBreadcrumbs(folder)
 
-    // 加载文件夹内容
-    if (activeMenu.value != 'trash') {
+    // 根据当前菜单状态加载内容
+    if (activeMenu.value !== 'trash') {
       await loadFolder(folder.fileId)
     } else {
       await loadRecycleFilesById(folder.fileId)
@@ -557,12 +575,19 @@ const enterFolder = async (folder) => {
   } catch (error) {
     console.error('进入文件夹失败:', error)
     message.error('加载文件夹失败')
+    // 出错时回退状态
+    if (folderHistory.value.length > 0) {
+      const previous = folderHistory.value.pop()
+      currentFolder.value = previous.id
+      currentFolderInfo.value = previous.info
+      breadcrumbs.value = previous.breadcrumbs
+    }
   } finally {
     isLoading.value = false
   }
 }
 
-//通过ID获得回收文件
+// 通过ID获得回收文件
 const loadRecycleFilesById = async (folderId) => {
   try {
     isLoading.value = true
@@ -571,8 +596,6 @@ const loadRecycleFilesById = async (folderId) => {
         id: folderId,
       }
     })
-
-    console.log(response.data)
 
     if (response.code == 200) {
       fileList.value = response.data || []
@@ -587,19 +610,26 @@ const loadRecycleFilesById = async (folderId) => {
   }
 }
 
+// 修复返回上一级逻辑
 const goBack = async () => {
   if (folderHistory.value.length > 0) {
     try {
       isLoading.value = true
       const previous = folderHistory.value.pop()
-      currentFolder.value = previous.id
-      currentFolderInfo.value = previous.info
 
-      // 更新面包屑
-      updateBreadcrumbs(previous.info, true)
+      // 确保历史记录与当前状态同步
+      if (previous && previous.id !== currentFolder.value) {
+        currentFolder.value = previous.id
+        currentFolderInfo.value = previous.info
+        breadcrumbs.value = previous.breadcrumbs
 
-      // 加载文件夹内容
-      await loadFolder(previous.id)
+        // 根据当前菜单状态加载内容
+        if (activeMenu.value === 'trash') {
+          await loadRecycleFilesById(previous.id)
+        } else {
+          await loadFolder(previous.id)
+        }
+      }
     } catch (error) {
       console.error('返回上一级失败:', error)
       message.error('加载失败')
@@ -607,11 +637,13 @@ const goBack = async () => {
       isLoading.value = false
     }
   } else {
-    goToRoot()
+    // 没有历史记录时返回根目录
+    await goToRoot()
   }
   selectedFiles.value = []
 }
 
+// 修复根目录导航
 const goToRoot = async () => {
   try {
     isLoading.value = true
@@ -620,7 +652,9 @@ const goToRoot = async () => {
     breadcrumbs.value = []
     folderHistory.value = []
     selectedFiles.value = []
-    await loadRootFolder()
+
+    router.push("/mainPage")
+    
   } catch (error) {
     console.error('返回根目录失败:', error)
     message.error('加载失败')
@@ -629,27 +663,38 @@ const goToRoot = async () => {
   }
 }
 
+// 修复路径跳转
 const goToPath = async (index) => {
   if (index === breadcrumbs.value.length - 1) return
 
   try {
     isLoading.value = true
+    const targetCrumb = breadcrumbs.value[index]
+
+    if (!targetCrumb) {
+      await goToRoot()
+      return
+    }
+
+    // 更新面包屑
     breadcrumbs.value = breadcrumbs.value.slice(0, index + 1)
 
-    if (index === -1) {
-      await goToRoot()
-    } else {
-      const targetCrumb = breadcrumbs.value[index]
-      currentFolder.value = targetCrumb.id
-      currentFolderInfo.value = targetCrumb.info
+    // 更新当前文件夹信息
+    currentFolder.value = targetCrumb.id
+    currentFolderInfo.value = targetCrumb.info
 
-      // 更新历史记录
-      folderHistory.value = breadcrumbs.value.slice(0, index).map(crumb => ({
-        id: crumb.id,
-        info: crumb.info
-      }))
+    // 正确更新历史记录：只保留跳转路径之前的历史
+    folderHistory.value = breadcrumbs.value.slice(0, index).map((crumb, i) => ({
+      id: crumb.id,
+      info: { ...crumb.info },
+      breadcrumbs: breadcrumbs.value.slice(0, i + 1)
+    }))
 
+    // 加载内容
+    if (activeMenu.value !== 'trash') {
       await loadFolder(targetCrumb.id)
+    } else {
+      await loadRecycleFilesById(targetCrumb.id)
     }
 
     selectedFiles.value = []
@@ -661,21 +706,31 @@ const goToPath = async (index) => {
   }
 }
 
+// 修复面包屑更新逻辑
 const updateBreadcrumbs = (folder, isBack = false) => {
   if (!folder) {
     breadcrumbs.value = []
     return
   }
 
-  if (!isBack) {
-    breadcrumbs.value.push({
-      id: folder.fileId,
-      name: folder.fileName,
-      info: folder
-    })
-  } else {
+  if (isBack) {
+    // 返回操作：找到当前文件夹在面包屑中的位置并截断
     const currentIndex = breadcrumbs.value.findIndex(crumb => crumb.id === folder.fileId)
     if (currentIndex !== -1) {
+      breadcrumbs.value = breadcrumbs.value.slice(0, currentIndex + 1)
+    }
+  } else {
+    // 进入新文件夹：检查是否已存在，避免重复添加
+    const exists = breadcrumbs.value.some(crumb => crumb.id === folder.fileId)
+    if (!exists) {
+      breadcrumbs.value.push({
+        id: folder.fileId,
+        name: folder.fileName,
+        info: folder
+      })
+    } else {
+      // 如果已存在，截断到该位置
+      const currentIndex = breadcrumbs.value.findIndex(crumb => crumb.id === folder.fileId)
       breadcrumbs.value = breadcrumbs.value.slice(0, currentIndex + 1)
     }
   }
@@ -683,7 +738,6 @@ const updateBreadcrumbs = (folder, isBack = false) => {
 
 // 文件操作方法
 const handleFileDblClick = (file) => {
-  console.log(file.fileCategory)
   if (file.fileCategory == 4) { // 文件夹
     enterFolder(file)
   } else {
@@ -695,19 +749,25 @@ const handleRowDblClick = (row) => {
   handleFileDblClick(row)
 }
 
-// 菜单变化处理
-// 菜单变化处理
+// 修复菜单变化处理
 const handleMenuChange = async (key) => {
+  activeMenu.value = key
+
   if (key === 'trash') {
-    await loadRecycleFiles()
+    if (currentFolder.value) {
+      await loadRecycleFilesById(currentFolder.value)
+    } else {
+      await loadRecycleFiles()
+    }
   } else if (currentFolder.value) {
     await loadFolder(currentFolder.value)
   } else {
     await loadRootFolder()
   }
-  // 清空已选文件
+
   selectedFiles.value = []
 }
+
 // 加载回收站文件
 const loadRecycleFiles = async () => {
   try {
@@ -721,13 +781,16 @@ const loadRecycleFiles = async () => {
     if (response.code === 200) {
       fileList.value = response.data || []
     } else {
-
+      message.error(response.data?.message || '加载失败')
     }
   } catch (error) {
+    console.error('加载回收站失败:', error)
+    message.error('网络错误，请稍后重试')
   } finally {
     isLoading.value = false
   }
 }
+
 // 上传相关方法
 const handleBeforeUpload = (options) => {
   const { file } = options
@@ -748,20 +811,42 @@ const handleBeforeUpload = (options) => {
   return true
 }
 
+// 修改 handleFileChange 函数
 const handleFileChange = ({ fileList: newFileList }) => {
-  const newFiles = newFileList.filter(newFile =>
-    !uploadTasks.value.some(task =>
-      task.id === newFile.id ||
-      (task.file.name === newFile.name && task.file.size === newFile.file?.size)
+  console.log('文件变化:', newFileList)
+  
+  // 获取当前所有文件的唯一标识
+  const existingFiles = uploadTasks.value.map(task => ({
+    id: task.id,
+    name: task.fileName,
+    size: task.fileSize
+  }))
+  
+  // 过滤出真正的新文件
+  const newFiles = newFileList.filter(newFile => {
+    const newFileId = newFile.id || newFile.uid
+    const newFileName = newFile.name || newFile.file?.name
+    const newFileSize = newFile.size || newFile.file?.size
+    
+    // 检查是否已存在于 uploadTasks
+    const isDuplicate = existingFiles.some(existing => 
+      existing.id === newFileId ||
+      (existing.name === newFileName && existing.size === newFileSize)
     )
-  )
+    
+    return !isDuplicate
+  })
 
+  // 添加新文件
   newFiles.forEach(fileInfo => {
+    const fileId = fileInfo.id || fileInfo.uid || Date.now() + Math.random()
+    const file = fileInfo.file || fileInfo
+    
     uploadTasks.value.push({
-      id: fileInfo.id || Date.now() + Math.random(),
-      file: fileInfo.file || fileInfo,
-      fileName: fileInfo.name,
-      fileSize: fileInfo.file?.size || 0,
+      id: fileId,
+      file: file,
+      fileName: file.name || fileInfo.name,
+      fileSize: file.size || fileInfo.size || 0,
       status: 'pending',
       progress: 0,
       statusText: '等待上传',
@@ -769,8 +854,25 @@ const handleFileChange = ({ fileList: newFileList }) => {
       result: null
     })
   })
+  
+  // 清理重复的文件（如果有的话）
+  cleanupDuplicateFiles()
 }
 
+// 新增：清理重复文件函数
+const cleanupDuplicateFiles = () => {
+  const seen = new Map()
+  uploadTasks.value = uploadTasks.value.filter(task => {
+    const key = `${task.fileName}_${task.fileSize}`
+    if (!seen.has(key)) {
+      seen.set(key, true)
+      return true
+    }
+    return false
+  })
+}
+
+// 修改 removeUploadTask 函数
 const removeUploadTask = (taskId) => {
   const taskIndex = uploadTasks.value.findIndex(task => task.id === taskId)
   if (taskIndex === -1) return
@@ -782,27 +884,48 @@ const removeUploadTask = (taskId) => {
     return
   }
 
+  // 从 uploadTasks 中移除
   uploadTasks.value = uploadTasks.value.filter(task => task.id !== taskId)
+  console.log('移除后的任务列表:', uploadTasks.value)
 
+  // 使用更直接的方法清除上传组件的文件
   if (uploadRef.value) {
     nextTick(() => {
       try {
-        const currentList = Array.isArray(uploadRef.value.fileList)
-          ? [...uploadRef.value.fileList]
-          : []
-
-        const updatedList = currentList.filter(file =>
-          !(file.name === task.file.name && file.size === task.file.size)
-        )
-
-        uploadRef.value.fileList = updatedList
+        // 方法1: 如果组件有 clear 方法，调用它
+        if (uploadRef.value.clear && typeof uploadRef.value.clear === 'function') {
+          uploadRef.value.clear()
+        }
+        
+        // 方法2: 重置 fileList
+        if (uploadRef.value.fileList && Array.isArray(uploadRef.value.fileList)) {
+          // 完全清空 fileList
+          uploadRef.value.fileList = []
+          
+          // 然后重新设置，但只设置我们想要的文件
+          setTimeout(() => {
+            uploadRef.value.fileList = uploadTasks.value.map(task => ({
+              uid: task.id,
+              name: task.fileName,
+              status: 'pending',
+              file: task.file
+            }))
+          }, 0)
+        }
+        
+        // 方法3: 强制重置上传组件的内部状态
+        if (uploadRef.value.$el) {
+          const fileInput = uploadRef.value.$el.querySelector('input[type="file"]')
+          if (fileInput) {
+            // 重置文件输入
+            fileInput.value = ''
+          }
+        }
       } catch (error) {
-        console.warn('更新文件列表时出现小问题，但不影响功能:', error)
+        console.warn('更新文件列表时出现问题:', error)
       }
     })
   }
-
-  message.success('文件已从上传列表移除')
 }
 
 const canRemoveFile = (task) => {
@@ -1010,7 +1133,6 @@ const uploadSingleFile = async (task) => {
           isQuickUpload: true,
           result: result
         }
-        // message.success(`文件 "${task.file.name}" 秒传成功`)
       } else {
         successTasks[successTaskIndex] = {
           ...successTasks[successTaskIndex],
@@ -1020,10 +1142,8 @@ const uploadSingleFile = async (task) => {
           isQuickUpload: false,
           result: result
         }
-
         message.success(`文件 "${task.file.name}" 上传成功`)
       }
-      //重新加载该目录
       uploadTasks.value = successTasks
     }
 
@@ -1045,7 +1165,6 @@ const uploadSingleFile = async (task) => {
 
     message.error(`文件 "${task.file.name}" 上传失败：${error.message}`)
     throw error
-  } finally {
   }
 }
 
@@ -1086,7 +1205,7 @@ const changeView = (type) => { viewType.value = type }
 const handleUpload = () => {
   showUploadModal.value = true
 }
-//新建文件夹的名称
+
 // 新建文件夹的名称
 const newFolderName = ref("")
 
@@ -1110,26 +1229,27 @@ const handleNewFolder = async () => {
     onPositiveClick: async () => {
       if (!newFolderName.value.trim()) {
         message.error('文件夹名称不能为空')
-        return false // 阻止对话框关闭
+        return false
       }
 
       const f = {
         userId: JSON.parse(localStorage.getItem("user")).id,
         fileName: newFolderName.value,
         fileSize: 0,
-        filePid: currentFolderInfo.value.fileId
+        filePid: currentFolderInfo.value?.fileId || '0'
       }
-
 
       const response = await service.post("/api/file/info/c_folder", f)
 
-      console.log(response)
       if (response.code == 200) {
         message.success(`创建文件夹成功: ${newFolderName.value}`)
-        // 这里可以添加实际的创建文件夹逻辑
         newFolderName.value = ""
-        loadFolder(currentFolderInfo.value.fileId)
-        return true // 允许对话框关闭
+        if (currentFolderInfo.value) {
+          await loadFolder(currentFolderInfo.value.fileId)
+        } else {
+          await loadRootFolder()
+        }
+        return true
       } else {
         message.error("操作失败，请稍后再试！")
         return false;
@@ -1163,11 +1283,9 @@ const handlePermanentDelete = () => {
       } else {
         message.error("操作失败，请稍后再试！")
       }
-
     }
   })
 }
-
 
 const handleRecycle = () => {
   if (selectedFiles.value.length === 0) return
@@ -1180,11 +1298,8 @@ const handleRecycle = () => {
     onPositiveClick: async () => {
       var response = null
       if (selectedFiles.value.length === 1) {
-        //调用API删除
         response = await service.get(`/api/file/info/recycle_file/${selectedFiles.value[0]}`)
       } else {
-        console.log(selectedFiles.value)
-        //多个文件
         response = await service.post('/api/file/info/recycle_files', selectedFiles.value)
       }
       if (response.code === 200) {
@@ -1194,10 +1309,10 @@ const handleRecycle = () => {
       } else {
         message.error("操作失败，请稍后再试！")
       }
-
     }
   })
 }
+
 const handleRestore = () => {
   if (selectedFiles.value.length === 0) return
   dialog.warning({
@@ -1208,16 +1323,11 @@ const handleRestore = () => {
     onPositiveClick: async () => {
       let response = null
       try {
-        // 多个文件批量恢复
-        console.log('批量恢复文件：', selectedFiles.value)
         response = await service.post('/api/file/info/restore_file', selectedFiles.value)
 
         if (response.code === 200) {
-          // 从文件列表中移除已恢复的文件
           fileList.value = fileList.value.filter(file => !selectedFiles.value.includes(file.fileId))
           message.success(`成功恢复 ${selectedFiles.value.length} 个文件`)
-
-          // 清空选中
           selectedFiles.value = []
         } else {
           message.error(response.message || '恢复失败，请稍后再试！')
@@ -1229,6 +1339,7 @@ const handleRestore = () => {
     }
   })
 }
+
 const handleShare = () => {
   if (selectedFiles.value.length > 0) {
     message.info(`分享 ${selectedFiles.value.length} 个文件`)
@@ -1262,21 +1373,20 @@ const toggleFileSelection = (fileId) => {
 }
 
 const handlePreviewSingle = (file) => {
-  if (file.fileCategory === 1) {
-    message.info('文件夹不支持预览')
-  } else {
-    message.info(`预览文件: ${file.fileName}`)
-  }
+  selectedFile.value = file
+  showPreviewModal.value = true
+  console.log(selectedFile.value)
 }
+
 const baseUrl = "http://localhost:9000/"
+
 const handleDownloadSingle = (file) => {
   if (file.fileCategory == 4) {
     message.info('文件夹不支持下载')
   } else {
-    // console.log(file.filePath)
     const link = document.createElement('a');
     link.href = baseUrl + file.filePath;
-    link.download = file.fileName || 'download'; // 设置下载文件名
+    link.download = file.fileName || 'download';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1301,46 +1411,13 @@ const handleDeleteSingle = (file) => {
 
 // 根据枚举值返回对应的文件类型
 const getFileType = (category) => {
-  // 根据枚举返回对应的文件类型分类
-  // folder: 文件夹, image: 图片, document: 文档, video: 视频, audio: 音频, code: 代码文件
   switch (category) {
-    // 文件夹
     case 4: return 'folder'
-
-    // 图片类型
-    case 5:  // gif
-    case 9:  // jpg
-    case 14: // png
-      return 'image'
-
-    // 视频类型
-    case 12: // mp4
-      return 'video'
-
-    // 音频类型
-    case 11: // mp3
-      return 'audio'
-
-    // 代码文件
-    case 1:  // c
-    case 2:  // cpp
-    case 3:  // css
-    case 6:  // html
-    case 7:  // java
-    case 8:  // js
-    case 10: // json
-    case 16: // sql
-    case 17: // txt
-    case 21: // md
-      return 'code'
-
-    // 文档类型
-    case 13: // pdf
-    case 15: // pptx
-    case 18: // docx
-    case 19: // doc
-    default:  // 其他类型
-      return 'document'
+    case 5: case 9: case 14: return 'image'
+    case 12: return 'video'
+    case 11: return 'audio'
+    case 1: case 2: case 3: case 6: case 7: case 8: case 10: case 16: case 17: case 21: return 'code'
+    case 13: case 15: case 18: case 19: default: return 'document'
   }
 }
 
@@ -1352,7 +1429,7 @@ const getFileIcon = (type) => {
     video: VideocamOutline,
     audio: MusicalNotesOutline,
     folder: FolderOutline,
-    code: CodeOutline, // 如果没有 CodeOutline 图标，可以用 DocumentTextOutline
+    code: CodeOutline,
   }
   return iconMap[type] || DocumentTextOutline
 }
@@ -1402,6 +1479,12 @@ const loadRootFolder = async () => {
       fileList.value = response.data.children || []
       currentFolderInfo.value = response.data.folderInfo
       currentFolder.value = currentFolderInfo.value.fileId
+      // 初始化面包屑
+      breadcrumbs.value = [{
+        id: currentFolderInfo.value.fileId,
+        name: '根目录',
+        info: currentFolderInfo.value
+      }]
     } else {
       message.error(response.data?.message || '加载失败')
     }
@@ -1420,8 +1503,6 @@ const loadFolder = async (folderId) => {
 
     const response = await service.get(`/api/file/info/folder/${folderId}`)
 
-    console.log(response.data)
-
     if (response.code == 200) {
       fileList.value = response.data || []
     } else {
@@ -1434,12 +1515,10 @@ const loadFolder = async (folderId) => {
     isLoading.value = false
   }
 }
-//用户空间使用情况
+
+// 用户空间使用情况
 const userFileSpaceUsed = async () => {
-
-  //用户信息
   const u = JSON.parse(localStorage.getItem("user"))
-
   const response = await service.get("/api/user/info/getAllAndUsedSpace", {
     params: {
       userId: u.id,
@@ -1447,11 +1526,8 @@ const userFileSpaceUsed = async () => {
   })
   totalStorage.value = response.data.total_size
   usedStorage.value = response.data.used_size
-
-  storageUsage.value = (formatFileSize(usedStorage.value) / totalStorage.value) * 100;
-  console.log(storageUsage.value)
+  storageUsage.value = (usedStorage.value / (totalStorage.value * 1024 * 1024 * 1024)) * 100;
 }
-
 
 const userFileRecycleFiles = async () => {
   const response = await service.get("/api/file/info/get_recycle_files", {
@@ -1596,37 +1672,54 @@ onMounted(async () => {
   margin-top: 4px;
 }
 
+/* 文件信息区域 - 文件名居中 */
 .file-info {
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-between;
+  min-width: 0;
+  width: 100%;
 }
 
 .file-name {
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 4;
-  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  text-align: center;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 2.4em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2.4em;
+  padding: 0 2px;
+}
+
+/* 文件名居中显示修正 */
+.file-name .n-ellipsis {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-
-  /* 添加以下属性 */
-  direction: rtl;
-  /* 从右到左 */
-  unicode-bidi: bidi-override;
-  text-align: left;
-  /* 覆盖之前的 text-align: center */
+  width: 100%;
 }
 
 .file-meta {
   text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .file-size,
@@ -1655,6 +1748,25 @@ onMounted(async () => {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   padding: 2px;
+}
+
+.preview-modal .n-card {
+  /* 确保卡片本身不产生滚动 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-modal .n-card__content {
+  /* 内容区域占据剩余空间并滚动 */
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+  /* 如果FilePreview组件有自带边距，可以取消内边距 */
+}
+
+.modal-content {
+  height: 100%;
 }
 
 :deep(.selected-row) {

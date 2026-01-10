@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme="isDark ? darkTheme : null" :theme-overrides="themeOverrides">
     <div id="app" :class="[isDark ? 'dark-theme' : 'light-theme']">
       <!-- Header固定区域 -->
       <n-layout-header bordered="true" class="fixed-header">
@@ -66,7 +66,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { darkTheme, NGlobalStyle } from 'naive-ui';
+import { darkTheme, dateZhCN, NGlobalStyle, zhCN } from 'naive-ui';
 import { useRouter } from 'vue-router'
 
 // 响应式主题状态

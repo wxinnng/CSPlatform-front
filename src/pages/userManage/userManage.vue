@@ -1,262 +1,351 @@
 <template>
     <div class="user-profile-page">
         <!-- 可自定义背景 -->
-        <div class="profile-background" :style="{ backgroundImage: `url(${userInfo.backgroundImage})` }">
+        <div class="profile-background"
+            :style="{ backgroundImage: `url(http://localhost:9000/singing/png/22cab91c-cab6-4427-9f57-63c63cee89b2Screenshot_2024_1030_161042.png)` }">
             <div class="background-overlay"></div>
         </div>
 
         <div class="profile-content">
             <!-- 加载状态 -->
-            <div v-if="isLoading" class="loading-container">
-                <n-spin size="large" description="加载中..." />
-            </div>
+            <n-spin v-if="isLoading" size="large" description="加载中...">
+                <div style="height: 400px"></div>
+            </n-spin>
 
             <!-- 错误状态 -->
-            <div v-else-if="isError" class="error-message">
-                <n-alert type="error" title="加载失败">
-                    {{ errorMessage }}
-                </n-alert>
-                <n-button @click="fetchUserInfo" type="primary" class="retry-btn">
-                    重新加载
-                </n-button>
-            </div>
+            <n-alert v-else-if="isError" type="error" title="加载失败" class="error-message">
+                {{ errorMessage }}
+                <template #action>
+                    <n-button @click="fetchUserInfo" type="primary" size="small" class="retry-btn">
+                        重新加载
+                    </n-button>
+                </template>
+            </n-alert>
 
             <!-- 正常内容 -->
             <template v-else>
                 <!-- 用户信息卡片 -->
-                <div class="user-info-card">
-                    <!-- 头像区域 -->
-                    <div class="avatar-area">
-                        <div class="avatar-container" @mouseenter="showAvatarHint = true"
-                            @mouseleave="showAvatarHint = false" @click="triggerAvatarUpload">
-                            <div class="avatar-circle">
-                                <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="头像" class="avatar-image" />
-                                <div v-else class="avatar-default">
-                                    {{ userInfo.name?.charAt(0) || '用' }}
+                <n-card class="user-info-card" :content-style="{ padding: '30px' }" :bordered="false">
+                    <div class="card-content">
+                        <!-- 头像区域 -->
+                        <!-- 头像区域 -->
+                        <div class="avatar-area">
+                            <div class="avatar-container" @mouseenter="showAvatarHint = true"
+                                @mouseleave="showAvatarHint = false" @click="triggerAvatarUpload">
+                                <div class="avatar-circle">
+                                    <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="头像" class="avatar-image" />
+                                    <div v-else class="avatar-default">
+                                        {{ userInfo.name?.charAt(0) || '用' }}
+                                    </div>
                                 </div>
+                                <!-- 悬浮提示 -->
+                                <div v-if="showAvatarHint" class="avatar-tooltip">
+                                    修改头像
+                                </div>
+                                <input ref="avatarInput" type="file" accept="image/*" class="avatar-file-input"
+                                    @change="handleAvatarUpload" />
                             </div>
-                            <!-- 悬浮提示 -->
-                            <div v-if="showAvatarHint" class="avatar-tooltip">
-                                修改头像
-                            </div>
-                            <input ref="avatarInput" type="file" accept="image/*" class="avatar-file-input"
-                                @change="handleAvatarUpload" />
                         </div>
+
+
+                        <!-- 用户详细信息 -->
+                        <n-grid :cols="isMobile ? 1 : 3" :x-gap="24" class="user-details">
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">用户名称：</n-text>
+                                    <n-text class="detail-value" strong>{{ displayUserInfo.name }}</n-text>
+                                </n-space>
+                            </n-gi>
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">用户邮箱：</n-text>
+                                    <n-text class="detail-value">{{ displayUserInfo.email }}</n-text>
+                                </n-space>
+                            </n-gi>
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">用户性别：</n-text>
+                                    <n-text class="detail-value">{{ displayUserInfo.gender }}</n-text>
+                                </n-space>
+                            </n-gi>
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">手机号：</n-text>
+                                    <n-text class="detail-value">{{ displayUserInfo.phone }}</n-text>
+                                </n-space>
+                            </n-gi>
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">用户创建时间：</n-text>
+                                    <n-text class="detail-value">{{ displayUserInfo.createdAt }}</n-text>
+                                </n-space>
+                            </n-gi>
+                            <n-gi>
+                                <n-space vertical>
+                                    <n-text class="detail-label">用户学习等级：</n-text>
+                                    <n-tag :type="levelTagType" size="small">{{ displayUserInfo.level }}</n-tag>
+                                </n-space>
+                            </n-gi>
+                        </n-grid>
+
+                        <!-- 编辑按钮 -->
+                        <n-button type="info" ghost @click="handleEdit" class="edit-button" :block="isMobile">
+                            编辑个人信息
+                        </n-button>
                     </div>
+                </n-card>
 
-                    <!-- 用户详细信息 -->
-                    <div class="user-details">
-                        <div class="user-details-row">
-                            <div class="detail-item">
-                                <span class="detail-label">用户名称</span>
-                                <span class="detail-value">{{ displayUserInfo.name }}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">用户邮箱</span>
-                                <span class="detail-value">{{ displayUserInfo.email }}</span>
-                            </div>
-                        </div>
+                <!-- 功能标签区域 -->
+                <n-card :bordered="false" class="function-tabs-card">
+                    <n-tabs v-model:value="activeTab" type="segment" animated :tabs-padding="20" pane-class="tab-pane"
+                        size="large">
+                        <n-tab-pane name="published-courses" tab="我发布的课程">
+                            <template #tab>
+                                <n-space align="center" :size="8">
+                                    <n-text style="font-size: 20px;">📚</n-text>
+                                    <span>我发布的课程</span>
+                                </n-space>
+                            </template>
+                        </n-tab-pane>
 
-                        <div class="user-details-row">
-                            <div class="detail-item">
-                                <span class="detail-label">用户性别</span>
-                                <span class="detail-value">{{ displayUserInfo.gender }}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">手机号</span>
-                                <span class="detail-value">{{ displayUserInfo.phone }}</span>
-                            </div>
-                        </div>
+                        <n-tab-pane name="learning-courses" tab="我学习的课程">
+                            <template #tab>
+                                <n-space align="center" :size="8">
+                                    <n-text style="font-size: 20px;">🎓</n-text>
+                                    <span>我学习的课程</span>
+                                </n-space>
+                            </template>
+                        </n-tab-pane>
 
-                        <div class="user-details-row">
-                            <div class="detail-item">
-                                <span class="detail-label">用户创建时间</span>
-                                <span class="detail-value">{{ displayUserInfo.createdAt }}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">用户学习等级</span>
-                                <span class="detail-value">{{ displayUserInfo.level }}</span>
-                            </div>
-                        </div>
-                    </div>
+                        <n-tab-pane name="learning-cards" tab="正在学习的卡片">
+                            <template #tab>
+                                <n-space align="center" :size="8">
+                                    <n-text style="font-size: 20px;">📝</n-text>
+                                    <span>正在学习的卡片</span>
+                                </n-space>
+                            </template>
+                        </n-tab-pane>
 
-                    <!-- 编辑按钮 -->
-                    <n-button class="edit-button" type="info" @click="handleEdit">
-                        编辑个人信息
-                    </n-button>
-                </div>
+                        <n-tab-pane name="published-cards" tab="我发布的卡片">
+                            <template #tab>
+                                <n-space align="center" :size="8">
+                                    <n-text style="font-size: 20px;">📢</n-text>
+                                    <span>我发布的卡片</span>
+                                </n-space>
+                            </template>
+                        </n-tab-pane>
 
-                <!-- 功能按钮区域 -->
-                <div class="function-tabs">
-                    <button v-for="tab in tabs" :key="tab.key" class="tab-button"
-                        :class="{ 'tab-active': activeTab === tab.key }" @click="switchTab(tab.key)">
-                        <span class="tab-icon">{{ tab.icon }}</span>
-                        <span class="tab-text">{{ tab.label }}</span>
-                    </button>
-                </div>
+                        <n-tab-pane name="shared-experiences" tab="我分享的经验">
+                            <template #tab>
+                                <n-space align="center" :size="8">
+                                    <n-text style="font-size: 20px;">💡</n-text>
+                                    <span>我分享的经验</span>
+                                </n-space>
+                            </template>
+                        </n-tab-pane>
+                    </n-tabs>
+                </n-card>
 
                 <!-- 内容展示区域 -->
-                <div class="content-display-area">
-                    <transition name="tab-fade" mode="out-in">
-                        <!-- 我发布的课程 -->
-                        <div v-if="activeTab === 'published-courses'" class="content-section">
-                            <div v-if="publishedCourses.length === 0" class="empty-state">
-                                <n-empty size="large" description="暂无发布的课程">
-                                    <template #extra>
-                                        <n-button size="small" @click="handleCreateCourse">
+                <n-card class="content-display-area" :content-style="{ padding: 0, minHeight: '400px' }">
+                    <!-- 我发布的课程 -->
+                    <div v-if="activeTab === 'published-courses'" class="tab-content">
+                        <template v-if="publishedCourses.length === 0">
+                            <n-empty size="large" description="您还没有发布过课程" class="empty-state">
+                                <template #icon>
+                                    <n-text style="font-size: 60px; color: #bfbfbf;">📚</n-text>
+                                </template>
+                                <template #extra>
+                                    <n-space vertical align="center">
+                                        <n-text depth="3" style="margin-bottom: 16px;">
+                                            快来分享你的知识，创建第一个课程吧！
+                                        </n-text>
+                                        <n-button type="primary" size="medium" @click="handleCreateCourse" round>
                                             创建课程
                                         </n-button>
-                                    </template>
-                                </n-empty>
-                            </div>
-                            <div v-else v-for="course in publishedCourses" :key="course.id" class="content-card">
-                                <div class="card-image">
-                                    <img :src="course.cover" :alt="course.title">
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ course.title }}</h4>
-                                    <p class="card-description">{{ course.description }}</p>
-                                    <div class="card-meta">
-                                        <span class="card-category">{{ course.category }}</span>
-                                        <span class="card-students">{{ course.students }} 人学习</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </n-space>
+                                </template>
+                            </n-empty>
+                        </template>
 
-                        <!-- 我学习的课程 -->
-                        <div v-else-if="activeTab === 'learning-courses'" class="content-section">
-                            <div v-if="learningCourses.length === 0" class="empty-state">
-                                <n-empty size="large" description="暂无学习中的课程">
-                                    <template #extra>
-                                        <n-button size="small" @click="handleBrowseCourses">
+                        <n-grid v-else :cols="isMobile ? 1 : 2" :x-gap="20" :y-gap="20">
+                            <n-gi v-for="course in publishedCourses" :key="course.id">
+                                <n-card class="course-card" hoverable :content-style="{ padding: 0 }">
+                                    <div class="course-image-container">
+                                        <img :src="course.cover" :alt="course.title" class="course-image" />
+                                    </div>
+
+                                    <n-space vertical :size="12" style="padding: 20px;">
+                                        <n-ellipsis :line-clamp="2" :tooltip="false" class="course-title">
+                                            {{ course.title }}
+                                        </n-ellipsis>
+
+                                        <n-ellipsis :line-clamp="2" :tooltip="false" class="course-description">
+                                            {{ course.description }}
+                                        </n-ellipsis>
+
+                                        <n-space justify="space-between" align="center" class="course-meta">
+                                            <n-tag v-if="course.category" :bordered="false" size="small" type="info">
+                                                {{ course.category }}
+                                            </n-tag>
+
+                                            <n-space :size="4" align="center">
+                                                <n-text depth="3" class="meta-text">
+                                                    {{ course.students }} 人学习
+                                                </n-text>
+                                            </n-space>
+                                        </n-space>
+                                    </n-space>
+                                </n-card>
+                            </n-gi>
+                        </n-grid>
+                    </div>
+
+                    <!-- 我学习的课程 -->
+                    <div v-else-if="activeTab === 'learning-courses'" class="tab-content">
+                        <template v-if="learningCourses.length === 0">
+                            <n-empty size="large" description="您还没有开始学习任何课程" class="empty-state">
+                                <template #icon>
+                                    <n-text style="font-size: 60px; color: #bfbfbf;">🎓</n-text>
+                                </template>
+                                <template #extra>
+                                    <n-space vertical align="center">
+                                        <n-text depth="3" style="margin-bottom: 16px;">
+                                            快来探索精彩课程，开始学习之旅吧！
+                                        </n-text>
+                                        <n-button type="primary" size="medium" @click="handleBrowseCourses" round>
                                             浏览课程
                                         </n-button>
-                                    </template>
-                                </n-empty>
-                            </div>
-                            <div v-else v-for="course in learningCourses" :key="course.id" class="content-card">
-                                <div class="card-image">
-                                    <img :src="course.cover" :alt="course.title">
-                                    <div class="progress-container">
-                                        <div class="progress-bar" :style="{ width: `${course.progress}%` }"></div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ course.title }}</h4>
-                                    <div class="card-progress">
-                                        <span class="progress-text">学习进度: {{ course.progress }}%</span>
-                                        <span class="progress-time">已学习 {{ course.timeSpent }}h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </n-space>
+                                </template>
+                            </n-empty>
+                        </template>
 
-                        <!-- 其他标签页内容... -->
-                    </transition>
-                </div>
+                        <n-grid v-else :cols="isMobile ? 1 : 2" :x-gap="20" :y-gap="20">
+                            <n-gi v-for="course in learningCourses" :key="course.id">
+                                <n-card class="learning-course-card" hoverable :content-style="{ padding: 0 }">
+                                    <div class="course-image-container">
+                                        <img :src="course.cover" :alt="course.title" class="course-image" />
+                                        <div class="progress-overlay">
+                                            <n-progress type="line" :percentage="course.progress" :height="6"
+                                                status="success" :border-radius="4" :show-indicator="false" />
+                                        </div>
+                                    </div>
+
+                                    <n-space vertical :size="12" style="padding: 20px;">
+                                        <n-ellipsis :line-clamp="2" :tooltip="false" class="course-title">
+                                            {{ course.title }}
+                                        </n-ellipsis>
+
+                                        <n-space vertical :size="8">
+                                            <n-space justify="space-between" align="center">
+                                                <n-text strong style="color: #52c41a;">
+                                                    学习进度: {{ course.progress }}%
+                                                </n-text>
+                                            </n-space>
+
+                                            <n-progress type="line" :percentage="course.progress" :height="8"
+                                                status="success" :border-radius="4" processing />
+                                        </n-space>
+
+                                        <n-space justify="space-between" align="center" class="course-meta">
+                                            <n-space :size="4" align="center">
+                                                <n-text depth="3" class="meta-text">
+                                                    已学习 {{ course.timeSpent }}h
+                                                </n-text>
+                                            </n-space>
+                                        </n-space>
+                                    </n-space>
+                                </n-card>
+                            </n-gi>
+                        </n-grid>
+                    </div>
+
+                    <!-- 其他标签页 -->
+                    <div v-else class="tab-content">
+                        <n-empty size="large" description="功能开发中" class="empty-state">
+                            <template #icon>
+                                <n-text style="font-size: 60px; color: #bfbfbf;">🚧</n-text>
+                            </template>
+                            <template #extra>
+                                <n-text depth="3">
+                                    该功能正在积极开发中，敬请期待！
+                                </n-text>
+                            </template>
+                        </n-empty>
+                    </div>
+                </n-card>
             </template>
         </div>
-    </div>
 
-    <n-modal v-model:show="showEditModal" preset="card" title="👤 编辑个人信息" :bordered="false" size="huge"
-        class="edit-modal" :mask-closable="false" style="width: 500px;">
-        <div class="edit-form-container">
-            <!-- 表单区域 -->
-            <n-form ref="formRef" :model="editForm" :rules="rules" label-placement="left" label-width="100"
+        <!-- 编辑信息模态框 -->
+        <n-modal v-model:show="showEditModal" preset="card" title="编辑个人信息" :bordered="false" size="huge"
+            class="edit-modal" :mask-closable="false" style="max-width: 500px;">
+            <n-form ref="formRef" :model="editForm" :rules="rules" label-placement="left" label-width="auto"
                 label-align="right" size="large" class="edit-form">
-                <!-- 用户名称 -->
-                <n-form-item label="👤 用户名称" path="name">
+                <n-form-item label="用户名称" path="name">
                     <n-input v-model:value="editForm.name" placeholder="请输入用户名称" :maxlength="30" clearable />
                 </n-form-item>
 
-                <!-- 用户性别 -->
-                <n-form-item label="👫 用户性别" path="gender" :maxlength="30">
-                    <n-radio-group v-model:value="editForm.gender" class="gender-radio">
+                <n-form-item label="用户性别" path="gender">
+                    <n-radio-group v-model:value="editForm.gender">
                         <n-space>
-                            <n-radio value="男">
-                                <n-space align="center" :size="4">
-                                    <span style="font-size: 16px;">👨</span>
-                                    <span>男</span>
-                                </n-space>
-                            </n-radio>
-                            <n-radio value="女">
-                                <n-space align="center" :size="4">
-                                    <span style="font-size: 16px;">👩</span>
-                                    <span>女</span>
-                                </n-space>
-                            </n-radio>
-                            <n-radio value="保密">
-                                <n-space align="center" :size="4">
-                                    <span style="font-size: 16px;">🤐</span>
-                                    <span>保密</span>
-                                </n-space>
-                            </n-radio>
+                            <n-radio value="男">男</n-radio>
+                            <n-radio value="女">女</n-radio>
+                            <n-radio value="保密">保密</n-radio>
                         </n-space>
                     </n-radio-group>
                 </n-form-item>
 
-                <!-- 出生日期 -->
-                <n-form-item label="📅 出生日期" path="birthday" :maxlength="30">
+                <!-- <n-form-item label="出生日期" path="birthday">
                     <n-date-picker v-model:formatted-value="editForm.birthday" value-format="yyyy-MM-dd" type="date"
-                        actions="['今天','确定']" clearable style="width: 100%;" />
-                </n-form-item>
+                        clearable style="width: 100%;" />
+                </n-form-item> -->
 
-                <!-- 用户邮箱 -->
-                <n-form-item label="📧 用户邮箱" path="email" :maxlength="30">
+                <n-form-item label="用户邮箱" path="email">
                     <n-input v-model:value="editForm.email" placeholder="请输入用户邮箱" type="email" clearable />
                 </n-form-item>
-                <!-- 在模态框表单中添加密码字段 -->
-                <n-form-item label="🔐 密码" path="password">
+
+                <n-form-item label="密码" path="password">
                     <n-input v-model:value="editForm.password" placeholder="请输入密码" type="password" clearable
                         show-password-on="mousedown" />
                 </n-form-item>
-                <!-- 手机号码 -->
-                <n-form-item label="📱 手机号码" path="phone" :maxlength="30">
+
+                <n-form-item label="手机号码" path="phone">
                     <n-input v-model:value="editForm.phone" placeholder="请输入手机号码" :maxlength="11" clearable />
                 </n-form-item>
 
-                <!-- 学习等级 -->
-                <n-form-item label="🏆 学习等级" path="level">
-                    <n-select v-model:value="editForm.level" :disabled="true" :options="levelOptions"
-                        placeholder="请选择学习等级" clearable />
+                <n-form-item label="学习等级" path="level">
+                    <n-select v-model:value="editForm.level" disabled :options="levelOptions" placeholder="请选择学习等级"
+                        clearable />
                 </n-form-item>
 
-                <!-- 说明区域 -->
-                <div class="form-note">
-                    <n-alert title="💡 说明" type="info" :bordered="false" :maxlength="40">
-                        <ul class="note-list">
-                            <li>用户名称和邮箱将用于登录和找回密码</li>
-                            <li>手机号用于重要通知和安全验证</li>
-                            <li>学习等级会根据您的学习进度自动更新</li>
-                        </ul>
-                    </n-alert>
-                </div>
-            </n-form>
+                <n-alert title="说明" type="info" :bordered="false" class="form-note">
+                    <n-ul>
+                        <n-li>用户名称和邮箱将用于登录和找回密码</n-li>
+                        <n-li>手机号用于重要通知和安全验证</n-li>
+                        <n-li>学习等级会根据您的学习进度自动更新</n-li>
+                    </n-ul>
+                </n-alert>
 
-            <!-- 表单操作按钮 -->
-            <div class="form-actions">
-                <n-space justify="center" :size="20">
-                    <n-button type="error" size="large" @click="handleCancelEdit" class="action-btn cancel-btn">
-                        取消
-                    </n-button>
-
-                    <n-button type="primary" size="large" @click="handleSaveEdit" :loading="saving"
-                        class="action-btn save-btn">
+                <n-space justify="end" class="form-actions">
+                    <n-button @click="handleCancelEdit" class="action-btn">取消</n-button>
+                    <n-button type="primary" @click="handleSaveEdit" :loading="saving" class="action-btn">
                         保存修改
                     </n-button>
                 </n-space>
-            </div>
-        </div>
-    </n-modal>
+            </n-form>
+        </n-modal>
+    </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive, nextTick } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import {
     NButton, NModal, NForm, NFormItem, NInput, NRadioGroup, NRadio,
     NSpace, NDatePicker, NSelect, NAlert, NSpin, NEmpty, NMessageProvider,
-    useMessage, useLoadingBar
+    useMessage, useLoadingBar, NCard, NGrid, NGi, NTabs, NTabPane, NTooltip,
+    NAvatar, NTag, NEllipsis, NProgress, NText, NUl, NLi
 } from 'naive-ui'
 import { useWindowSize } from '@vueuse/core'
 import service from '../../utils/request';
@@ -278,11 +367,6 @@ const formRef = ref(null)
 
 // 移动端适配
 const isMobile = computed(() => width.value < 768)
-const responsiveConfig = computed(() => ({
-    formLayout: isMobile.value ? 'vertical' : 'horizontal',
-    labelWidth: isMobile.value ? 'auto' : '100px',
-    buttonSize: isMobile.value ? 'large' : 'medium'
-}))
 
 // 用户信息
 const userInfo = ref({
@@ -292,11 +376,12 @@ const userInfo = ref({
     email: '',
     gender: '',
     phone: '',
+    birthday: '',
     createdAt: '',
-    level: ''
+    level: '初级'
 })
 
-// 格式化显示的用户信息
+// 计算属性
 const displayUserInfo = computed(() => ({
     ...userInfo.value,
     phone: userInfo.value.phone && userInfo.value.phone.length === 11
@@ -305,15 +390,24 @@ const displayUserInfo = computed(() => ({
     createdAt: formatDateForDisplay(userInfo.value.createdAt)
 }))
 
+const levelTagType = computed(() => {
+    const levels = { '初级': 'default', '中级': 'info', '高级': 'success', '专家': 'warning', '大师': 'error' }
+    return levels[userInfo.value.level] || 'default'
+})
+
+const defaultAvatar = computed(() => {
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${userInfo.value.name || 'user'}`
+})
+
 // 编辑表单数据
 const editForm = reactive({
     name: '',
     email: '',
-    gender: '',
+    gender: '男',
+    birthday: '',
     phone: '',
-    createdAt: null,
-    level: '',
-    password: '',
+    level: '初级',
+    password: ''
 })
 
 // 学习等级选项
@@ -325,7 +419,7 @@ const levelOptions = [
     { label: '大师', value: '大师' }
 ]
 
-// 表单验证规则 [6,7](@ref)
+// 表单验证规则
 const rules = {
     name: [
         { required: true, message: '请输入用户名称', trigger: ['blur', 'change'] },
@@ -333,33 +427,11 @@ const rules = {
     ],
     email: [
         { required: true, message: '请输入邮箱地址', trigger: ['blur', 'change'] },
-        {
-            type: 'email',
-            message: '请输入正确的邮箱格式',
-            trigger: 'blur',
-            validator: (rule, value) => {
-                if (!value) return true
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                return emailRegex.test(value)
-            }
-        }
-    ],
-    gender: [
-        { required: true, message: '请选择性别', trigger: 'change' }
+        { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
     ],
     phone: [
         { required: true, message: '请输入手机号码', trigger: ['blur', 'change'] },
-        {
-            pattern: /^1[3-9]\d{9}$/,
-            message: '请输入正确的手机号码',
-            trigger: 'blur'
-        }
-    ],
-    createdAt: [
-        { required: true, message: '请选择创建时间', trigger: 'change' }
-    ],
-    level: [
-        { required: true, message: '请选择学习等级', trigger: 'change' }
+        { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
     ]
 }
 
@@ -376,7 +448,7 @@ const tabs = [
 const publishedCourses = ref([])
 const learningCourses = ref([])
 
-// 日期处理函数 [6](@ref)
+// 工具函数
 const formatDateForDisplay = (dateString) => {
     if (!dateString) return '未设置'
     try {
@@ -387,20 +459,6 @@ const formatDateForDisplay = (dateString) => {
     }
 }
 
-const parseDateForPicker = (dateString) => {
-    if (!dateString) return null
-    try {
-        const date = new Date(dateString)
-        return isNaN(date.getTime()) ? null : date.getTime()
-    } catch {
-        return null
-    }
-}
-
-const getDefaultDate = () => {
-    return userInfo.value.createdAt ? parseDateForPicker(userInfo.value.createdAt) : Date.now()
-}
-
 // API调用函数
 const fetchUserInfo = async () => {
     try {
@@ -408,7 +466,6 @@ const fetchUserInfo = async () => {
         isError.value = false
         loadingBar.start()
 
-        // 模拟API调用
         const userResponse = await service.get(`/api/user/info/e`, {
             params: { email: localStorage.getItem("userEmail") }
         })
@@ -417,7 +474,7 @@ const fetchUserInfo = async () => {
             const userData = userResponse.data
             userInfo.value = {
                 backgroundImage: userData.backgroundUrl || '',
-                avatar: userData.avatarUrl || '',
+                avatar: userData.avatarUrl || defaultAvatarUrl,
                 name: userData.username || '用户',
                 email: userData.email || '',
                 gender: userData.gender || '未设置',
@@ -425,14 +482,14 @@ const fetchUserInfo = async () => {
                 createdAt: userData.createTime || '',
                 level: userData.learningLevel || '初级'
             }
+            console.log(userInfo.value.avatar)
         } else {
             throw new Error(userResponse.data?.message || '获取用户信息失败')
         }
     } catch (error) {
         console.error('获取用户信息失败:', error)
         isError.value = true
-        errorMessage.value = error.response?.data?.message || error.message || '网络错误，请稍后重试'
-        message.error(`获取用户信息失败: ${errorMessage.value}`)
+        errorMessage.value = '网络错误，请稍后重试'
     } finally {
         isLoading.value = false
         loadingBar.finish()
@@ -445,27 +502,62 @@ const triggerAvatarUpload = () => {
     if (input) input.click()
 }
 
-const handleAvatarUpload = (event) => {
+const handleAvatarUpload = async (event) => {
     const file = event.target.files[0]
-    if (file) {
-        // 验证文件类型和大小 [1](@ref)
-        if (!file.type.startsWith('image/')) {
-            message.error('请选择图片文件')
-            return
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            message.error('图片大小不能超过5MB')
+    if (!file) return
+
+    // 验证文件类型和大小
+    if (!file.type.startsWith('image/')) {
+        message.error('请选择图片文件')
+        return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        message.error('图片大小不能超过5MB')
+        return
+    }
+
+    try {
+        const u = JSON.parse(localStorage.getItem("user"))
+        if (!u || !u.id) {
+            message.error("用户信息获取失败，请重新登录")
             return
         }
 
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            userInfo.value.avatar = e.target.result
+        // 创建 FormData
+        const formData = new FormData()
+        formData.append('id', u.id.toString())
+        formData.append('file', file)
+
+        // 发送请求
+        const response = await service.post("/api/user/info/modify_avatar", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+
+        if (response.code === 200) {
+            // 预览新头像
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                userInfo.value.avatar = e.target.result
+            }
+            reader.readAsDataURL(file)
             message.success('头像上传成功')
+        } else {
+            message.error(response.message || "头像上传失败")
         }
-        reader.readAsDataURL(file)
+    } catch (error) {
+        console.error('头像上传失败:', error)
+        if (error.response) {
+            console.error('响应数据:', error.response.data)
+            message.error(error.response.data.message || "上传失败")
+        } else {
+            message.error("网络错误，请检查连接")
+        }
+    } finally {
+        // 重置文件输入
+        event.target.value = ''
     }
-    event.target.value = ''
 }
 
 const handleEdit = () => {
@@ -474,41 +566,32 @@ const handleEdit = () => {
         email: userInfo.value.email || '',
         gender: userInfo.value.gender || '男',
         phone: userInfo.value.phone || '',
-        createdAt: parseDateForPicker(userInfo.value.createdAt),
         level: userInfo.value.level || '初级'
     })
     showEditModal.value = true
 }
 
-
 const handleSaveEdit = async () => {
-
     try {
         isLoading.value = true
         loadingBar.start()
         isError.value = false
-
         saving.value = true
-
 
         // 格式化生日日期
         let formattedBirthday = ''
         if (editForm.birthday) {
-            // 如果是时间戳，转换为日期
             if (typeof editForm.birthday === 'number') {
                 formattedBirthday = new Date(editForm.birthday).toISOString().split('T')[0]
             } else if (editForm.birthday.includes('-')) {
-                // 如果是yyyy-MM-dd格式，直接使用
                 formattedBirthday = editForm.birthday
             } else {
-                // 其他情况尝试解析
                 const date = new Date(editForm.birthday)
                 if (!isNaN(date.getTime())) {
                     formattedBirthday = date.toISOString().split('T')[0]
                 }
             }
         }
-
 
         // 性别转换
         const genderValue = editForm.gender === '男' ? 1 : (editForm.gender === '女' ? 0 : null)
@@ -517,22 +600,18 @@ const handleSaveEdit = async () => {
 
         // 准备发送给后端的数据
         const requestData = {
-            id:u.id,
+            id: u.id,
             username: editForm.name,
             email: editForm.email,
             gender: genderValue,
-            birthday: formattedBirthday,  // 使用格式化后的日期字符串
+            birthday: formattedBirthday,
             phone: editForm.phone,
-            learningLevel: editForm.level , // 添加学习等级
-            password: editForm.password 
+            learningLevel: editForm.level,
+            password: editForm.password
         }
-
-        console.log('发送给后端的数据:', requestData)
 
         // 调用后端API
         const response = await service.post("/api/user/info/modify", requestData)
-
-        console.log('后端响应:', response)
 
         if (response.code === 200) {
             message.success('个人信息更新成功！')
@@ -543,9 +622,7 @@ const handleSaveEdit = async () => {
                 email: editForm.email,
                 gender: editForm.gender,
                 phone: editForm.phone,
-                // 如果是生日字段，可能需要单独存储
-                birthday: formattedBirthday,  // 存储为生日字段
-                createdAt: userInfo.value.createdAt,  // 保持创建时间不变
+                birthday: formattedBirthday,
                 level: editForm.level
             })
 
@@ -554,7 +631,8 @@ const handleSaveEdit = async () => {
             message.error(response.message || "修改失败！")
         }
     } catch (error) {
-        message.error("服务器异常")
+        console.error('保存失败:', error)
+        message.error("服务器异常，请稍后重试")
     } finally {
         isLoading.value = false
         loadingBar.finish()
@@ -565,10 +643,6 @@ const handleSaveEdit = async () => {
 const handleCancelEdit = () => {
     showEditModal.value = false
     message.info('已取消编辑')
-}
-
-const switchTab = (tabKey) => {
-    activeTab.value = tabKey
 }
 
 const handleCreateCourse = () => {
@@ -585,35 +659,7 @@ onMounted(() => {
 })
 </script>
 
-
-
 <style scoped>
-/* 之前的CSS样式保持不变，添加以下响应式样式 */
-.loading-container,
-.error-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-}
-
-.retry-btn {
-    margin-top: 16px;
-}
-
-.empty-state {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-}
-
-.form-grid.single-column {
-    grid-template-columns: 1fr !important;
-}
-
-/* 原有的CSS样式保持不变 */
 .user-profile-page {
     min-height: 100vh;
     background: #f5f7fa;
@@ -626,91 +672,18 @@ onMounted(() => {
     left: 0;
     right: 0;
     height: 300px;
-    background-size: cover;
-    background-position: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.profile-content {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    z-index: 1;
-}
-
-.user-info-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-/* 其他样式保持不变... */
-
-@media (max-width: 768px) {
-    .user-info-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 20px;
-    }
-
-    .avatar-area {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-
-    .edit-button {
-        position: static;
-        margin-top: 20px;
-        width: 100%;
-    }
-
-    .function-tabs {
-        flex-direction: column;
-    }
-
-    .content-section {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 480px) {
-    .profile-content {
-        padding: 10px;
-    }
-}
-
-.user-profile-page {
-    min-height: 100vh;
-    background: #f5f7fa;
-    position: relative;
-}
-
-.profile-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 300px;
     background-size: cover;
     background-position: center;
-    background-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.profile-background::before {
-    content: '';
+.background-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.3);
-    opacity: 1;
 }
 
 .profile-content {
@@ -719,20 +692,20 @@ onMounted(() => {
     margin: 0 auto;
     padding: 20px;
     z-index: 1;
-    opacity: ;
 }
 
 /* 用户信息卡片 */
 .user-info-card {
-    background: white;
     border-radius: 16px;
-    padding: 30px;
     margin-bottom: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e8e8e8;
+}
+
+.card-content {
     display: flex;
     align-items: center;
     position: relative;
-    border: 1px solid #e8e8e8;
 }
 
 .avatar-area {
@@ -757,6 +730,11 @@ onMounted(() => {
     transition: all 0.3s ease;
 }
 
+.avatar-hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
 .avatar-container:hover .avatar-circle {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -767,7 +745,6 @@ onMounted(() => {
     height: 100%;
     object-fit: cover;
 }
-
 .avatar-default {
     width: 100%;
     height: 100%;
@@ -797,57 +774,32 @@ onMounted(() => {
     display: none;
 }
 
-/* 用户详细信息 */
 .user-details {
     flex: 1;
 }
 
-.user-details-row {
-    display: flex;
-    margin-bottom: 20px;
-    gap: 40px;
-}
-
-.detail-item {
-    flex: 1;
-    min-width: 200px;
-}
-
 .detail-label {
-    display: block;
     font-size: 14px;
     color: #666;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-weight: 500;
 }
 
 .detail-value {
-    display: block;
     font-size: 16px;
     color: #333;
     font-weight: 600;
 }
 
-/* 编辑按钮 */
 .edit-button {
     position: absolute;
-    top: 30px;
-    right: 30px;
+    top: 0;
+    right: 0;
     padding: 8px 24px;
 }
 
-.edit-button:hover {
-    background: #1890ff;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-}
-
 /* 功能标签区域 */
-.function-tabs {
-    display: flex;
-    gap: 4px;
-    background: white;
+.function-tabs-card {
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 30px;
@@ -855,415 +807,174 @@ onMounted(() => {
     border: 1px solid #f0f0f0;
 }
 
-.tab-button {
-    flex: 1;
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
-    font-family: inherit;
-}
-
-.tab-button:hover {
-    background: #f8f9fa;
-    transform: translateY(-2px);
-    border-color: #e6f7ff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.tab-active {
-    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-    color: white !important;
-    border-color: #1890ff !important;
-    box-shadow: 0 6px 20px rgba(24, 144, 255, 0.3) !important;
-}
-
-.tab-active:hover {
-    background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(24, 144, 255, 0.4) !important;
-}
-
-.tab-icon {
-    font-size: 24px;
-    margin-bottom: 4px;
-    transition: transform 0.3s ease;
-}
-
-.tab-button:hover .tab-icon {
-    transform: scale(1.1);
-}
-
-.tab-active .tab-icon {
-    transform: scale(1.1);
-}
-
-.tab-text {
-    font-size: 14px;
-    font-weight: 500;
-}
-
 /* 内容展示区域 */
 .content-display-area {
-    background: white;
     border-radius: 16px;
-    padding: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border: 1px solid #e8e8e8;
-    min-height: 400px;
-    position: relative;
-    overflow: hidden;
-}
-
-.content-section {
-    display: flex;
-    gap: 24px;
-    padding: 8px 4px 20px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    height: 100%;
-    align-items: stretch;
-}
-
-.content-section::-webkit-scrollbar {
-    display: none;
-}
-
-/* 课程卡片 */
-.content-card {
-    flex: 0 0 280px;
     background: white;
-    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid #f0f0f0;
+    min-height: 400px;
+}
+
+.tab-content {
+    min-height: 400px;
     display: flex;
     flex-direction: column;
-    cursor: pointer;
 }
 
-.content-card:hover {
-    transform: translateY(-6px) scale(1.02);
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-state :deep(.n-empty) {
+    max-width: 400px;
+}
+
+.empty-state :deep(.n-empty__icon) {
+    margin-bottom: 24px;
+}
+
+.empty-state :deep(.n-empty__description) {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.empty-state :deep(.n-empty__extra) {
+    margin-top: 8px;
+}
+
+/* 课程卡片样式 */
+.course-card,
+.learning-course-card {
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover,
+.learning-course-card:hover {
+    transform: translateY(-6px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
     border-color: #1890ff;
 }
 
-.card-image {
+.course-image-container {
     position: relative;
     width: 100%;
-    height: 160px;
+    height: 180px;
     overflow: hidden;
 }
 
-.card-image img {
+.course-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
 
-.content-card:hover .card-image img {
+.course-card:hover .course-image,
+.learning-course-card:hover .course-image {
     transform: scale(1.05);
 }
 
-.progress-container {
+.progress-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: rgba(0, 0, 0, 0.1);
+    padding: 0 20px 12px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
 }
 
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #52c41a, #73d13d);
-    transition: width 0.3s ease;
-}
-
-.card-body {
-    flex: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.card-title {
+/* 课程信息样式 */
+.course-title {
     font-size: 16px;
     font-weight: 600;
     color: #333;
-    margin: 0;
     line-height: 1.4;
+    margin: 0;
+    min-height: 44px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.card-description {
+.course-description {
     font-size: 13px;
     color: #666;
     line-height: 1.5;
     margin: 0;
+    min-height: 42px;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: 1;
-}
-
-.card-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px solid #f5f5f5;
-}
-
-.card-category {
-    font-size: 12px;
-    padding: 4px 8px;
-    background: #f0f7ff;
-    color: #1890ff;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-.card-students {
-    font-size: 12px;
-    color: #999;
-}
-
-.card-progress {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px solid #f5f5f5;
-}
-
-.progress-text {
-    font-size: 13px;
-    color: #52c41a;
-    font-weight: 500;
-}
-
-.progress-time {
-    font-size: 12px;
-    color: #999;
-}
-
-/* 卡片列表（文本卡片） */
-.card-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 8px;
-    max-height: 400px;
-}
-
-.card-list::-webkit-scrollbar {
-    display: none;
-}
-
-.text-card,
-.experience-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    cursor: pointer;
-}
-
-.text-card:hover,
-.experience-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.text-card {
-    border-color: #1890ff;
-}
-
-.text-card:hover {
-    border-color: #1890ff;
-}
-
-.experience-card {
-    border-color: #faad14;
-}
-
-.experience-card:hover {
-    border-color: #faad14;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-}
-
-.card-status {
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.status-learning {
-    background: #e6f7ff;
-    color: #1890ff;
-}
-
-.status-mastered {
-    background: #f6ffed;
-    color: #52c41a;
-}
-
-.card-views {
-    font-size: 12px;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.card-content {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.6;
-    margin: 0;
-    flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid #f5f5f5;
+.course-meta {
+    margin-top: 4px;
+}
+
+.meta-text {
     font-size: 12px;
-    color: #999;
+    line-height: 1;
 }
 
-.card-likes {
-    color: #f5222d;
+/* 学习进度卡片特殊样式 */
+.learning-course-card {
+    border-color: #e6f7ff;
+    background: linear-gradient(to bottom, rgba(230, 247, 255, 0.1), transparent);
 }
 
-.exp-tag {
-    font-size: 12px;
-    padding: 4px 8px;
-    background: #fff7e6;
-    color: #faad14;
-    border-radius: 4px;
-    font-weight: 500;
-    white-space: nowrap;
+.learning-course-card:hover {
+    border-color: #91d5ff;
+    background: linear-gradient(to bottom, rgba(145, 213, 255, 0.1), transparent);
 }
 
-.exp-content {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.6;
-    margin: 0;
-    flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+/* 错误状态 */
+.error-message {
+    margin: 40px auto;
+    max-width: 400px;
 }
 
-.exp-likes,
-.exp-comments {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+.retry-btn {
+    margin-top: 16px;
 }
 
-/* 切换动画 */
-.tab-fade-enter-active,
-.tab-fade-leave-active {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
+/* 表单样式 */
+.form-note {
+    margin: 16px 0;
 }
 
-.tab-fade-enter-from {
-    opacity: 0;
-    transform: translateX(30px);
+.form-actions {
+    margin-top: 24px;
 }
 
-.tab-fade-leave-to {
-    opacity: 0;
-    transform: translateX(-30px);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.action-btn {
+    min-width: 80px;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-    .user-info-card {
+    .card-content {
         flex-direction: column;
         text-align: center;
-        padding: 20px;
     }
 
     .avatar-area {
         margin-right: 0;
         margin-bottom: 20px;
-    }
-
-    .avatar-circle {
-        width: 80px;
-        height: 80px;
-    }
-
-    .avatar-default {
-        font-size: 24px;
-    }
-
-    .user-details-row {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .detail-item {
-        min-width: 100%;
     }
 
     .edit-button {
@@ -1272,28 +983,22 @@ onMounted(() => {
         width: 100%;
     }
 
-    .function-tabs {
-        flex-direction: column;
+    .course-image-container {
+        height: 160px;
     }
 
-    .tab-button {
-        padding: 16px;
+    .course-title {
+        font-size: 15px;
+        min-height: 40px;
     }
 
-    .content-section {
-        flex-direction: column;
-        overflow-x: hidden;
-        overflow-y: auto;
-        max-height: 500px;
+    .course-description {
+        font-size: 13px;
+        min-height: 36px;
     }
 
-    .content-card {
-        flex: 0 0 auto;
-        width: 100%;
-    }
-
-    .card-list {
-        grid-template-columns: 1fr;
+    .content-display-area {
+        border-radius: 12px;
     }
 }
 
@@ -1302,25 +1007,25 @@ onMounted(() => {
         padding: 10px;
     }
 
-    .avatar-circle {
-        width: 60px;
-        height: 60px;
+    .avatar-container {
+        width: 80px;
+        height: 80px;
     }
 
-    .tab-button {
-        padding: 12px;
+    .tab-content {
+        min-height: 300px;
     }
 
-    .tab-icon {
-        font-size: 20px;
+    .empty-state {
+        padding: 40px 20px;
     }
 
-    .tab-text {
-        font-size: 12px;
+    .empty-state :deep(.n-empty__description) {
+        font-size: 16px;
     }
 
-    .content-display-area {
-        padding: 20px;
+    .course-image-container {
+        height: 140px;
     }
 }
 </style>
