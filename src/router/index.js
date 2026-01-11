@@ -6,6 +6,7 @@ import MainPage from '../pages/mainPage/MainPage.vue'
 import Auth from '../pages/auth/Auth.vue'
 import UserManage from '../pages/userManage/userManage.vue'
 import Resources from '../pages/resources/Resources.vue'
+import KnowledgeCard from '../pages/knowledgeCard/KnowledgeCard.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,11 @@ const router = createRouter({
             name: 'resources',
             path: '/resources',
             component: Resources
+        },
+        {
+            name: 'knowledgeCard',
+            path: '/knowledgeCard',
+            component: KnowledgeCard
         },
         {
             path: '/',
